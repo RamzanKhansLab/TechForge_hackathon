@@ -1,7 +1,7 @@
 {
   "name": "skillproof-api", "version": "1.0.0", "private": true, "type": "module",
   "engines": { "node": ">=22.14.0" },
-  "scripts": { "dev": "node --watch src/server.js", "start": "node src/server.js" },
+  "scripts": { "dev": "node --watch src/server.js", "start": "node src/server.js", "test": "node --test test/**/*.test.js" },
   "dependencies": {
     "axios": "^1.12.2", "cloudinary": "^2.7.0", "cors": "^2.8.5", "dotenv": "^17.2.2",
     "express": "^5.1.0", "express-rate-limit": "^8.1.0", "helmet": "^8.1.0",

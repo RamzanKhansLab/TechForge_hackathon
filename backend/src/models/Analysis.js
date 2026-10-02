@@ -23,13 +23,14 @@ const repositorySchema = new Schema({
   filesInspected: [String], evidence: [evidenceSchema], warnings: [String],
 }, { _id: false });
 const schema = new Schema({
+  reportId: { type: Schema.Types.ObjectId, ref: 'Analysis', default: function() { return this._id; }, index: true },
   accessTokenHash: { type: String, required: true, select: false },
   githubUsername: { type: String, required: true, maxlength: 39 },
   candidate: { name: String, email: String, phone: String },
   resume: {
     filename: String, pages: Number,
     asset: { type: resumeAssetSchema, required: true },
-    skills: [String], categories: { type: Map, of: [String] }, projects: [String], experience: [String], education: [String], certifications: [String],
+    skills: [String], detailedSkills: [Schema.Types.Mixed], categories: { type: Map, of: [String] }, projects: [String], experience: [String], education: [String], certifications: [String],
   },
   github: { login: String, name: String, avatarUrl: String, url: String, bio: String, publicRepos: Number, followers: Number },
   repositories: [repositorySchema], skills: [skillSchema], warnings: [String],
@@ -42,4 +43,5 @@ const schema = new Schema({
 }, { timestamps: true });
 schema.index({ status: 1, leaseUntil: 1, createdAt: 1 });
 schema.index({ githubUsername: 1, createdAt: -1 });
+schema.index({ reportId: 1, createdAt: -1 });
 export const Analysis = mongoose.model('Analysis', schema);

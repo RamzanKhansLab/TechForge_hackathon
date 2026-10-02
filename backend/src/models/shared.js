@@ -4,10 +4,15 @@ export const evidenceSchema = new Schema({
   url: String, date: Date, strength: { type: String, enum: ['direct', 'supporting'] },
 }, { _id: false });
 export const skillSchema = new Schema({
-  id: String, name: String, category: String, claimed: Boolean,
+  id: String, name: String, label: String, category: String, claimed: Schema.Types.Mixed,
   status: { type: String, enum: ['Proven', 'Partial', 'Claimed-only'] },
+  verdict: { type: String, enum: ['Proven', 'Partial', 'Claimed-only'] },
   score: Number, reasons: [String], repositories: [String], evidence: [evidenceSchema],
-  breakdown: [{ _id: false, rule: String, points: Number }],
+  breakdown: Schema.Types.Mixed,
+  breakdownMax: Schema.Types.Mixed,
+  breakdownList: [{ _id: false, rule: String, points: Number, description: String }],
+  trustFlags: [{ _id: false, code: String, severity: String, repo: String, explanation: String }],
+  firstSeen: Date, lastSeen: Date, activityByMonth: Schema.Types.Mixed, impliedBy: [String],
 }, { _id: false });
 export const taskSchema = new Schema({
   skill: String, title: String, description: String, difficulty: String, estimatedTime: String,

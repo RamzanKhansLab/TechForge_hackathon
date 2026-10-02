@@ -1,0 +1,1634 @@
+[
+  {
+    "id": "javascript",
+    "label": "JavaScript",
+    "category": "language",
+    "aliases": ["javascript", "ecmascript", "js"],
+    "implies": [],
+    "related": [{ "id": "typescript", "weight": 0.8 }, { "id": "nodejs", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": [],
+      "topics": ["javascript", "js", "ecmascript"],
+      "languages": ["JavaScript"]
+    }
+  },
+  {
+    "id": "typescript",
+    "label": "TypeScript",
+    "category": "language",
+    "aliases": ["typescript", "ts"],
+    "implies": ["javascript"],
+    "related": [{ "id": "javascript", "weight": 0.9 }, { "id": "react", "weight": 0.6 }],
+    "hints": {
+      "npm": ["typescript", "ts-node"],
+      "pip": [],
+      "maven": [],
+      "files": ["tsconfig.json"],
+      "imports": [],
+      "topics": ["typescript", "ts"],
+      "languages": ["TypeScript"]
+    }
+  },
+  {
+    "id": "python",
+    "label": "Python",
+    "category": "language",
+    "aliases": ["python", "python3", "py"],
+    "implies": [],
+    "related": [{ "id": "django", "weight": 0.6 }, { "id": "flask", "weight": 0.6 }, { "id": "fastapi", "weight": 0.6 }, { "id": "pandas", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["setup.py", "pyproject.toml", "Pipfile", "requirements.txt"],
+      "imports": [],
+      "topics": ["python", "python3"],
+      "languages": ["Python"]
+    }
+  },
+  {
+    "id": "java",
+    "label": "Java",
+    "category": "language",
+    "aliases": ["java", "openjdk", "jdk"],
+    "implies": [],
+    "related": [{ "id": "spring", "weight": 0.8 }, { "id": "kotlin", "weight": 0.6 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["pom.xml", "build.gradle", "mvnw", "gradlew"],
+      "imports": ["import java\\."],
+      "topics": ["java", "jvm"],
+      "languages": ["Java"]
+    }
+  },
+  {
+    "id": "csharp",
+    "label": "C#",
+    "category": "language",
+    "aliases": ["c#", "csharp", "c sharp", ".net"],
+    "implies": [],
+    "related": [{ "id": "dotnet", "weight": 0.9 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [".*\\.csproj$", ".*\\.sln$"],
+      "imports": ["using System;"],
+      "topics": ["csharp", "dotnet", "c-sharp"],
+      "languages": ["C#"]
+    }
+  },
+  {
+    "id": "cpp",
+    "label": "C++",
+    "category": "language",
+    "aliases": ["c++", "cpp", "cplusplus"],
+    "implies": ["c"],
+    "related": [{ "id": "c", "weight": 0.8 }, { "id": "rust", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["CMakeLists.txt", "Makefile"],
+      "imports": ["#include <iostream>", "#include <vector>"],
+      "topics": ["cpp", "cplusplus"],
+      "languages": ["C++"]
+    }
+  },
+  {
+    "id": "c",
+    "label": "C",
+    "category": "language",
+    "aliases": ["c language", "ansi c"],
+    "implies": [],
+    "related": [{ "id": "cpp", "weight": 0.8 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["Makefile"],
+      "imports": ["#include <stdio.h>", "#include <stdlib.h>"],
+      "topics": ["c"],
+      "languages": ["C"]
+    }
+  },
+  {
+    "id": "go",
+    "label": "Go",
+    "category": "language",
+    "aliases": ["golang", "go language", "go programming"],
+    "implies": [],
+    "related": [{ "id": "docker", "weight": 0.5 }, { "id": "kubernetes", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["go.mod", "go.sum"],
+      "imports": ["package main"],
+      "topics": ["golang", "go"],
+      "languages": ["Go"]
+    }
+  },
+  {
+    "id": "rust",
+    "label": "Rust",
+    "category": "language",
+    "aliases": ["rust-lang", "rust language"],
+    "implies": [],
+    "related": [{ "id": "cpp", "weight": 0.6 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["Cargo.toml", "Cargo.lock"],
+      "imports": ["fn main\\(\\)"],
+      "topics": ["rust", "rust-lang"],
+      "languages": ["Rust"]
+    }
+  },
+  {
+    "id": "php",
+    "label": "PHP",
+    "category": "language",
+    "aliases": ["php", "php7", "php8"],
+    "implies": [],
+    "related": [{ "id": "laravel", "weight": 0.8 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["composer.json", "composer.lock"],
+      "imports": ["<\\?php"],
+      "topics": ["php"],
+      "languages": ["PHP"]
+    }
+  },
+  {
+    "id": "ruby",
+    "label": "Ruby",
+    "category": "language",
+    "aliases": ["ruby"],
+    "implies": [],
+    "related": [{ "id": "rails", "weight": 0.9 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["Gemfile", "Gemfile.lock", "Rakefile"],
+      "imports": ["require ['\"]"],
+      "topics": ["ruby"],
+      "languages": ["Ruby"]
+    }
+  },
+  {
+    "id": "swift",
+    "label": "Swift",
+    "category": "language",
+    "aliases": ["swift language", "apple swift"],
+    "implies": [],
+    "related": [{ "id": "ios", "weight": 0.9 }, { "id": "objectivec", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["Package.swift", ".*\\.xcodeproj$"],
+      "imports": ["import UIKit", "import SwiftUI"],
+      "topics": ["swift", "ios"],
+      "languages": ["Swift"]
+    }
+  },
+  {
+    "id": "kotlin",
+    "label": "Kotlin",
+    "category": "language",
+    "aliases": ["kotlin"],
+    "implies": ["java"],
+    "related": [{ "id": "android", "weight": 0.9 }, { "id": "java", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["build.gradle.kts"],
+      "imports": ["import kotlin\\."],
+      "topics": ["kotlin", "android"],
+      "languages": ["Kotlin"]
+    }
+  },
+  {
+    "id": "scala",
+    "label": "Scala",
+    "category": "language",
+    "aliases": ["scala"],
+    "implies": ["java"],
+    "related": [{ "id": "spark", "weight": 0.7 }, { "id": "java", "weight": 0.6 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["build.sbt"],
+      "imports": [],
+      "topics": ["scala"],
+      "languages": ["Scala"]
+    }
+  },
+  {
+    "id": "r",
+    "label": "R",
+    "category": "language",
+    "aliases": ["r programming", "r-project", "r language", "r stats"],
+    "implies": [],
+    "related": [{ "id": "python", "weight": 0.4 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["DESCRIPTION"],
+      "imports": ["library\\("],
+      "topics": ["r", "rstats"],
+      "languages": ["R"]
+    }
+  },
+  {
+    "id": "dart",
+    "label": "Dart",
+    "category": "language",
+    "aliases": ["dart", "dartlang"],
+    "implies": [],
+    "related": [{ "id": "flutter", "weight": 0.9 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["pubspec.yaml"],
+      "imports": ["import 'package:flutter"],
+      "topics": ["dart", "flutter"],
+      "languages": ["Dart"]
+    }
+  },
+  {
+    "id": "elixir",
+    "label": "Elixir",
+    "category": "language",
+    "aliases": ["elixir"],
+    "implies": [],
+    "related": [{ "id": "phoenix", "weight": 0.9 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["mix.exs"],
+      "imports": ["defmodule "],
+      "topics": ["elixir"],
+      "languages": ["Elixir"]
+    }
+  },
+  {
+    "id": "clojure",
+    "label": "Clojure",
+    "category": "language",
+    "aliases": ["clojure"],
+    "implies": ["java"],
+    "related": [{ "id": "java", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["project.clj"],
+      "imports": ["\\(ns "],
+      "topics": ["clojure"],
+      "languages": ["Clojure"]
+    }
+  },
+  {
+    "id": "sql",
+    "label": "SQL",
+    "category": "language",
+    "aliases": ["sql", "structured query language", "ansi sql"],
+    "implies": [],
+    "related": [{ "id": "postgresql", "weight": 0.7 }, { "id": "mysql", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [".*\\.sql$"],
+      "imports": ["SELECT .* FROM"],
+      "topics": ["sql", "database"],
+      "languages": ["SQL", "PLpgSQL"]
+    }
+  },
+  {
+    "id": "bash",
+    "label": "Bash",
+    "category": "language",
+    "aliases": ["bash", "shell scripting", "sh", "zsh"],
+    "implies": [],
+    "related": [{ "id": "linux", "weight": 0.8 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [".*\\.sh$"],
+      "imports": ["#!/bin/bash", "#!/bin/sh"],
+      "topics": ["bash", "shell"],
+      "languages": ["Shell"]
+    }
+  },
+  {
+    "id": "html",
+    "label": "HTML",
+    "category": "frontend",
+    "aliases": ["html", "html5"],
+    "implies": [],
+    "related": [{ "id": "css", "weight": 0.9 }, { "id": "javascript", "weight": 0.8 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["index.html"],
+      "imports": ["<!DOCTYPE html>"],
+      "topics": ["html", "html5"],
+      "languages": ["HTML"]
+    }
+  },
+  {
+    "id": "css",
+    "label": "CSS",
+    "category": "frontend",
+    "aliases": ["css", "css3"],
+    "implies": [],
+    "related": [{ "id": "html", "weight": 0.9 }, { "id": "tailwind", "weight": 0.7 }, { "id": "sass", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [".*\\.css$"],
+      "imports": [],
+      "topics": ["css", "css3"],
+      "languages": ["CSS"]
+    }
+  },
+  {
+    "id": "sass",
+    "label": "Sass / SCSS",
+    "category": "frontend",
+    "aliases": ["sass", "scss"],
+    "implies": ["css"],
+    "related": [{ "id": "css", "weight": 0.9 }],
+    "hints": {
+      "npm": ["sass", "node-sass"],
+      "pip": [],
+      "maven": [],
+      "files": [".*\\.scss$", ".*\\.sass$"],
+      "imports": ["@import ['\"].*\\.scss['\"]"],
+      "topics": ["sass", "scss"],
+      "languages": ["SCSS", "Sass"]
+    }
+  },
+  {
+    "id": "react",
+    "label": "React",
+    "category": "frontend",
+    "aliases": ["react", "reactjs", "react.js"],
+    "implies": ["javascript"],
+    "related": [{ "id": "nextjs", "weight": 0.85 }, { "id": "redux", "weight": 0.6 }, { "id": "vue", "weight": 0.5 }],
+    "hints": {
+      "npm": ["react", "react-dom"],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": ["from ['\"]react['\"]", "require\\(['\"]react['\"]\\)"],
+      "topics": ["react", "reactjs"],
+      "languages": []
+    }
+  },
+  {
+    "id": "nextjs",
+    "label": "Next.js",
+    "category": "frontend",
+    "aliases": ["next.js", "nextjs", "next js"],
+    "implies": ["react", "javascript", "nodejs"],
+    "related": [{ "id": "react", "weight": 0.95 }, { "id": "vercel", "weight": 0.7 }],
+    "hints": {
+      "npm": ["next"],
+      "pip": [],
+      "maven": [],
+      "files": ["next.config.js", "next.config.mjs", "next.config.ts"],
+      "imports": ["from ['\"]next/", "require\\(['\"]next/"],
+      "topics": ["nextjs", "next-js"],
+      "languages": []
+    }
+  },
+  {
+    "id": "vue",
+    "label": "Vue",
+    "category": "frontend",
+    "aliases": ["vue", "vue.js", "vuejs", "vue 3", "vue 2"],
+    "implies": ["javascript"],
+    "related": [{ "id": "nuxt", "weight": 0.85 }, { "id": "react", "weight": 0.5 }],
+    "hints": {
+      "npm": ["vue", "@vue/runtime-core"],
+      "pip": [],
+      "maven": [],
+      "files": [".*\\.vue$"],
+      "imports": ["from ['\"]vue['\"]", "<template>"],
+      "topics": ["vue", "vuejs"],
+      "languages": ["Vue"]
+    }
+  },
+  {
+    "id": "nuxt",
+    "label": "Nuxt.js",
+    "category": "frontend",
+    "aliases": ["nuxt", "nuxt.js", "nuxtjs"],
+    "implies": ["vue", "javascript", "nodejs"],
+    "related": [{ "id": "vue", "weight": 0.95 }],
+    "hints": {
+      "npm": ["nuxt", "nuxt3"],
+      "pip": [],
+      "maven": [],
+      "files": ["nuxt.config.js", "nuxt.config.ts"],
+      "imports": ["from ['\"]#app['\"]"],
+      "topics": ["nuxt", "nuxtjs"],
+      "languages": []
+    }
+  },
+  {
+    "id": "angular",
+    "label": "Angular",
+    "category": "frontend",
+    "aliases": ["angular", "angularjs", "angular 2+"],
+    "implies": ["typescript", "javascript"],
+    "related": [{ "id": "typescript", "weight": 0.8 }, { "id": "rxjs", "weight": 0.7 }],
+    "hints": {
+      "npm": ["@angular/core", "@angular/common"],
+      "pip": [],
+      "maven": [],
+      "files": ["angular.json"],
+      "imports": ["from ['\"]@angular/core['\"]"],
+      "topics": ["angular", "angularjs"],
+      "languages": []
+    }
+  },
+  {
+    "id": "svelte",
+    "label": "Svelte",
+    "category": "frontend",
+    "aliases": ["svelte", "sveltekit", "svelte.js"],
+    "implies": ["javascript"],
+    "related": [{ "id": "react", "weight": 0.5 }, { "id": "vue", "weight": 0.5 }],
+    "hints": {
+      "npm": ["svelte", "@sveltejs/kit"],
+      "pip": [],
+      "maven": [],
+      "files": ["svelte.config.js", ".*\\.svelte$"],
+      "imports": ["from ['\"]svelte['\"]"],
+      "topics": ["svelte", "sveltekit"],
+      "languages": ["Svelte"]
+    }
+  },
+  {
+    "id": "tailwind",
+    "label": "Tailwind CSS",
+    "category": "frontend",
+    "aliases": ["tailwind", "tailwindcss", "tailwind css"],
+    "implies": ["css"],
+    "related": [{ "id": "css", "weight": 0.8 }, { "id": "react", "weight": 0.5 }],
+    "hints": {
+      "npm": ["tailwindcss", "@tailwindcss/postcss", "@tailwindcss/vite"],
+      "pip": [],
+      "maven": [],
+      "files": ["tailwind.config.js", "tailwind.config.ts", "tailwind.config.cjs"],
+      "imports": ["@import ['\"]tailwindcss['\"]"],
+      "topics": ["tailwindcss", "tailwind"],
+      "languages": []
+    }
+  },
+  {
+    "id": "bootstrap",
+    "label": "Bootstrap",
+    "category": "frontend",
+    "aliases": ["bootstrap", "bootstrap 5", "bootstrap 4"],
+    "implies": ["css"],
+    "related": [{ "id": "css", "weight": 0.7 }],
+    "hints": {
+      "npm": ["bootstrap"],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": ["from ['\"]bootstrap['\"]"],
+      "topics": ["bootstrap"],
+      "languages": []
+    }
+  },
+  {
+    "id": "redux",
+    "label": "Redux",
+    "category": "frontend",
+    "aliases": ["redux", "redux toolkit", "rtk"],
+    "implies": ["javascript"],
+    "related": [{ "id": "react", "weight": 0.8 }],
+    "hints": {
+      "npm": ["redux", "@reduxjs/toolkit", "react-redux"],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": ["from ['\"]@reduxjs/toolkit['\"]", "from ['\"]react-redux['\"]"],
+      "topics": ["redux"],
+      "languages": []
+    }
+  },
+  {
+    "id": "zustand",
+    "label": "Zustand",
+    "category": "frontend",
+    "aliases": ["zustand"],
+    "implies": ["javascript"],
+    "related": [{ "id": "react", "weight": 0.8 }],
+    "hints": {
+      "npm": ["zustand"],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": ["from ['\"]zustand['\"]"],
+      "topics": ["zustand"],
+      "languages": []
+    }
+  },
+  {
+    "id": "webpack",
+    "label": "Webpack",
+    "category": "tool",
+    "aliases": ["webpack"],
+    "implies": ["javascript", "nodejs"],
+    "related": [{ "id": "vite", "weight": 0.6 }],
+    "hints": {
+      "npm": ["webpack", "webpack-cli"],
+      "pip": [],
+      "maven": [],
+      "files": ["webpack.config.js"],
+      "imports": [],
+      "topics": ["webpack"],
+      "languages": []
+    }
+  },
+  {
+    "id": "vite",
+    "label": "Vite",
+    "category": "tool",
+    "aliases": ["vite", "vitejs"],
+    "implies": ["javascript", "nodejs"],
+    "related": [{ "id": "react", "weight": 0.5 }, { "id": "vue", "weight": 0.5 }],
+    "hints": {
+      "npm": ["vite", "@vitejs/plugin-react", "@vitejs/plugin-vue"],
+      "pip": [],
+      "maven": [],
+      "files": ["vite.config.js", "vite.config.ts", "vite.config.mjs"],
+      "imports": ["from ['\"]vite['\"]"],
+      "topics": ["vite"],
+      "languages": []
+    }
+  },
+  {
+    "id": "nodejs",
+    "label": "Node.js",
+    "category": "backend",
+    "aliases": ["node.js", "nodejs", "node js"],
+    "implies": ["javascript"],
+    "related": [{ "id": "express", "weight": 0.8 }, { "id": "nestjs", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["package.json"],
+      "imports": ["require\\(['\"]node:", "from ['\"]node:"],
+      "topics": ["nodejs", "node"],
+      "languages": []
+    }
+  },
+  {
+    "id": "express",
+    "label": "Express",
+    "category": "backend",
+    "aliases": ["express.js", "expressjs", "express framework"],
+    "implies": ["nodejs", "javascript"],
+    "related": [{ "id": "nodejs", "weight": 0.9 }, { "id": "nestjs", "weight": 0.5 }],
+    "hints": {
+      "npm": ["express"],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": ["from ['\"]express['\"]", "require\\(['\"]express['\"]\\)"],
+      "topics": ["expressjs", "express"],
+      "languages": []
+    }
+  },
+  {
+    "id": "nestjs",
+    "label": "NestJS",
+    "category": "backend",
+    "aliases": ["nestjs", "nest.js"],
+    "implies": ["typescript", "nodejs", "javascript"],
+    "related": [{ "id": "express", "weight": 0.6 }, { "id": "typescript", "weight": 0.8 }],
+    "hints": {
+      "npm": ["@nestjs/core", "@nestjs/common"],
+      "pip": [],
+      "maven": [],
+      "files": ["nest-cli.json"],
+      "imports": ["from ['\"]@nestjs/core['\"]"],
+      "topics": ["nestjs"],
+      "languages": []
+    }
+  },
+  {
+    "id": "django",
+    "label": "Django",
+    "category": "backend",
+    "aliases": ["django", "django rest framework", "drf"],
+    "implies": ["python"],
+    "related": [{ "id": "python", "weight": 0.95 }, { "id": "flask", "weight": 0.6 }],
+    "hints": {
+      "npm": [],
+      "pip": ["django", "djangorestframework"],
+      "maven": [],
+      "files": ["manage.py"],
+      "imports": ["import django", "from django\\."],
+      "topics": ["django"],
+      "languages": []
+    }
+  },
+  {
+    "id": "flask",
+    "label": "Flask",
+    "category": "backend",
+    "aliases": ["flask framework", "flask api"],
+    "implies": ["python"],
+    "related": [{ "id": "fastapi", "weight": 0.7 }, { "id": "django", "weight": 0.6 }],
+    "hints": {
+      "npm": [],
+      "pip": ["flask"],
+      "maven": [],
+      "files": [],
+      "imports": ["from flask import", "import flask"],
+      "topics": ["flask"],
+      "languages": []
+    }
+  },
+  {
+    "id": "fastapi",
+    "label": "FastAPI",
+    "category": "backend",
+    "aliases": ["fastapi", "fast api"],
+    "implies": ["python"],
+    "related": [{ "id": "pydantic", "weight": 0.8 }, { "id": "flask", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": ["fastapi", "uvicorn"],
+      "maven": [],
+      "files": [],
+      "imports": ["from fastapi import", "import fastapi"],
+      "topics": ["fastapi"],
+      "languages": []
+    }
+  },
+  {
+    "id": "spring",
+    "label": "Spring Boot",
+    "category": "backend",
+    "aliases": ["spring boot", "springboot", "spring framework"],
+    "implies": ["java"],
+    "related": [{ "id": "java", "weight": 0.95 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": ["spring-boot-starter-web", "spring-boot-starter"],
+      "files": [],
+      "imports": ["import org\\.springframework\\."],
+      "topics": ["spring-boot", "spring"],
+      "languages": []
+    }
+  },
+  {
+    "id": "rails",
+    "label": "Ruby on Rails",
+    "category": "backend",
+    "aliases": ["ruby on rails", "rails"],
+    "implies": ["ruby"],
+    "related": [{ "id": "ruby", "weight": 0.95 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["config/routes.rb", "bin/rails"],
+      "imports": ["Rails\\.application"],
+      "topics": ["rails", "rubyonrails"],
+      "languages": []
+    }
+  },
+  {
+    "id": "laravel",
+    "label": "Laravel",
+    "category": "backend",
+    "aliases": ["laravel"],
+    "implies": ["php"],
+    "related": [{ "id": "php", "weight": 0.95 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["artisan"],
+      "imports": ["use Illuminate\\."],
+      "topics": ["laravel"],
+      "languages": []
+    }
+  },
+  {
+    "id": "dotnet",
+    "label": ".NET",
+    "category": "backend",
+    "aliases": [".net core", "asp.net", "aspnet", "dotnet"],
+    "implies": ["csharp"],
+    "related": [{ "id": "csharp", "weight": 0.95 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [".*\\.csproj$"],
+      "imports": ["using Microsoft\\.AspNetCore"],
+      "topics": ["aspnet", "dotnet-core"],
+      "languages": []
+    }
+  },
+  {
+    "id": "graphql",
+    "label": "GraphQL",
+    "category": "backend",
+    "aliases": ["graphql", "graph ql", "apollo graphql"],
+    "implies": [],
+    "related": [{ "id": "rest", "weight": 0.6 }],
+    "hints": {
+      "npm": ["graphql", "@apollo/server", "@apollo/client"],
+      "pip": ["graphene", "strawberry-graphql"],
+      "maven": [],
+      "files": [".*\\.graphql$", ".*\\.gql$"],
+      "imports": ["from ['\"]graphql['\"]"],
+      "topics": ["graphql"],
+      "languages": ["GraphQL"]
+    }
+  },
+  {
+    "id": "rest",
+    "label": "REST APIs",
+    "category": "concept",
+    "aliases": ["rest api", "restful", "rest apis", "rest architecture"],
+    "implies": [],
+    "related": [{ "id": "graphql", "weight": 0.6 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": [],
+      "topics": ["rest-api", "restful"],
+      "languages": []
+    }
+  },
+  {
+    "id": "grpc",
+    "label": "gRPC",
+    "category": "backend",
+    "aliases": ["grpc", "protocol buffers", "protobuf"],
+    "implies": [],
+    "related": [{ "id": "microservices", "weight": 0.7 }],
+    "hints": {
+      "npm": ["@grpc/grpc-js"],
+      "pip": ["grpcio", "protobuf"],
+      "maven": ["grpc-netty-shaded"],
+      "files": [".*\\.proto$"],
+      "imports": ["import grpc"],
+      "topics": ["grpc", "protobuf"],
+      "languages": ["Protocol Buffer"]
+    }
+  },
+  {
+    "id": "socketio",
+    "label": "Socket.IO / WebSockets",
+    "category": "backend",
+    "aliases": ["socket.io", "socketio", "websockets", "websocket"],
+    "implies": [],
+    "related": [{ "id": "nodejs", "weight": 0.5 }],
+    "hints": {
+      "npm": ["socket.io", "socket.io-client", "ws"],
+      "pip": ["websockets"],
+      "maven": [],
+      "files": [],
+      "imports": ["from ['\"]socket.io['\"]", "from ['\"]ws['\"]"],
+      "topics": ["websocket", "socket-io"],
+      "languages": []
+    }
+  },
+  {
+    "id": "microservices",
+    "label": "Microservices",
+    "category": "concept",
+    "aliases": ["microservices", "microservice architecture", "distributed systems"],
+    "implies": [],
+    "related": [{ "id": "docker", "weight": 0.7 }, { "id": "kubernetes", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": [],
+      "topics": ["microservices"],
+      "languages": []
+    }
+  },
+  {
+    "id": "mongodb",
+    "label": "MongoDB",
+    "category": "database",
+    "aliases": ["mongodb", "mongo db", "mongo"],
+    "implies": [],
+    "related": [{ "id": "mongoose", "weight": 0.9 }, { "id": "postgresql", "weight": 0.4 }],
+    "hints": {
+      "npm": ["mongodb", "mongoose"],
+      "pip": ["pymongo", "motor"],
+      "maven": ["mongodb-driver-sync"],
+      "files": [],
+      "imports": ["from ['\"]mongoose['\"]", "from pymongo import"],
+      "topics": ["mongodb", "nosql"],
+      "languages": []
+    }
+  },
+  {
+    "id": "mongoose",
+    "label": "Mongoose",
+    "category": "database",
+    "aliases": ["mongoose", "mongoose odm"],
+    "implies": ["mongodb", "nodejs", "javascript"],
+    "related": [{ "id": "mongodb", "weight": 0.95 }],
+    "hints": {
+      "npm": ["mongoose"],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": ["from ['\"]mongoose['\"]", "require\\(['\"]mongoose['\"]\\)"],
+      "topics": ["mongoose"],
+      "languages": []
+    }
+  },
+  {
+    "id": "postgresql",
+    "label": "PostgreSQL",
+    "category": "database",
+    "aliases": ["postgresql", "postgres", "psql"],
+    "implies": ["sql"],
+    "related": [{ "id": "mysql", "weight": 0.7 }, { "id": "prisma", "weight": 0.6 }],
+    "hints": {
+      "npm": ["pg", "pg-promise"],
+      "pip": ["psycopg2", "psycopg2-binary", "asyncpg"],
+      "maven": ["postgresql"],
+      "files": [],
+      "imports": ["import psycopg2", "from ['\"]pg['\"]"],
+      "topics": ["postgresql", "postgres"],
+      "languages": []
+    }
+  },
+  {
+    "id": "mysql",
+    "label": "MySQL",
+    "category": "database",
+    "aliases": ["mysql", "mariadb"],
+    "implies": ["sql"],
+    "related": [{ "id": "postgresql", "weight": 0.7 }],
+    "hints": {
+      "npm": ["mysql", "mysql2"],
+      "pip": ["mysql-connector-python", "pymysql"],
+      "maven": ["mysql-connector-j"],
+      "files": [],
+      "imports": ["from ['\"]mysql2['\"]"],
+      "topics": ["mysql"],
+      "languages": []
+    }
+  },
+  {
+    "id": "redis",
+    "label": "Redis",
+    "category": "database",
+    "aliases": ["redis", "redis cache"],
+    "implies": [],
+    "related": [{ "id": "memcached", "weight": 0.6 }],
+    "hints": {
+      "npm": ["redis", "ioredis"],
+      "pip": ["redis"],
+      "maven": ["jedis", "lettuce-core"],
+      "files": [],
+      "imports": ["from ['\"]ioredis['\"]", "import redis"],
+      "topics": ["redis", "caching"],
+      "languages": []
+    }
+  },
+  {
+    "id": "sqlite",
+    "label": "SQLite",
+    "category": "database",
+    "aliases": ["sqlite", "sqlite3"],
+    "implies": ["sql"],
+    "related": [{ "id": "postgresql", "weight": 0.5 }],
+    "hints": {
+      "npm": ["sqlite3", "better-sqlite3"],
+      "pip": [],
+      "maven": ["sqlite-jdbc"],
+      "files": [".*\\.sqlite3?$", ".*\\.db$"],
+      "imports": ["import sqlite3"],
+      "topics": ["sqlite"],
+      "languages": []
+    }
+  },
+  {
+    "id": "prisma",
+    "label": "Prisma",
+    "category": "database",
+    "aliases": ["prisma", "prisma orm"],
+    "implies": ["typescript", "javascript"],
+    "related": [{ "id": "postgresql", "weight": 0.7 }, { "id": "mysql", "weight": 0.6 }],
+    "hints": {
+      "npm": ["@prisma/client", "prisma"],
+      "pip": [],
+      "maven": [],
+      "files": ["prisma/schema.prisma"],
+      "imports": ["from ['\"]@prisma/client['\"]"],
+      "topics": ["prisma", "orm"],
+      "languages": ["Prisma"]
+    }
+  },
+  {
+    "id": "drizzle",
+    "label": "Drizzle ORM",
+    "category": "database",
+    "aliases": ["drizzle", "drizzle-orm"],
+    "implies": ["typescript", "javascript"],
+    "related": [{ "id": "prisma", "weight": 0.7 }],
+    "hints": {
+      "npm": ["drizzle-orm", "drizzle-kit"],
+      "pip": [],
+      "maven": [],
+      "files": ["drizzle.config.ts"],
+      "imports": ["from ['\"]drizzle-orm"],
+      "topics": ["drizzle-orm"],
+      "languages": []
+    }
+  },
+  {
+    "id": "elasticsearch",
+    "label": "Elasticsearch",
+    "category": "database",
+    "aliases": ["elasticsearch", "elastic search", "opensearch"],
+    "implies": [],
+    "related": [{ "id": "mongodb", "weight": 0.4 }],
+    "hints": {
+      "npm": ["@elastic/elasticsearch"],
+      "pip": ["elasticsearch"],
+      "maven": ["elasticsearch"],
+      "files": [],
+      "imports": ["from elasticsearch import"],
+      "topics": ["elasticsearch"],
+      "languages": []
+    }
+  },
+  {
+    "id": "cassandra",
+    "label": "Cassandra",
+    "category": "database",
+    "aliases": ["cassandra", "apache cassandra"],
+    "implies": [],
+    "related": [{ "id": "mongodb", "weight": 0.4 }],
+    "hints": {
+      "npm": ["cassandra-driver"],
+      "pip": ["cassandra-driver"],
+      "maven": ["cassandra-driver-core"],
+      "files": [],
+      "imports": [],
+      "topics": ["cassandra"],
+      "languages": []
+    }
+  },
+  {
+    "id": "neo4j",
+    "label": "Neo4j",
+    "category": "database",
+    "aliases": ["neo4j", "cypher"],
+    "implies": [],
+    "related": [],
+    "hints": {
+      "npm": ["neo4j-driver"],
+      "pip": ["neo4j"],
+      "maven": [],
+      "files": [],
+      "imports": ["from neo4j import"],
+      "topics": ["neo4j", "graph-database"],
+      "languages": []
+    }
+  },
+  {
+    "id": "firebase",
+    "label": "Firebase",
+    "category": "cloud",
+    "aliases": ["firebase", "firestore"],
+    "implies": [],
+    "related": [{ "id": "gcp", "weight": 0.8 }, { "id": "supabase", "weight": 0.6 }],
+    "hints": {
+      "npm": ["firebase", "firebase-admin"],
+      "pip": ["firebase-admin"],
+      "maven": [],
+      "files": ["firebase.json", ".firebaserc"],
+      "imports": ["from ['\"]firebase/"],
+      "topics": ["firebase"],
+      "languages": []
+    }
+  },
+  {
+    "id": "supabase",
+    "label": "Supabase",
+    "category": "cloud",
+    "aliases": ["supabase"],
+    "implies": ["postgresql"],
+    "related": [{ "id": "firebase", "weight": 0.7 }, { "id": "postgresql", "weight": 0.8 }],
+    "hints": {
+      "npm": ["@supabase/supabase-js"],
+      "pip": ["supabase"],
+      "maven": [],
+      "files": ["supabase/config.toml"],
+      "imports": ["from ['\"]@supabase/supabase-js['\"]"],
+      "topics": ["supabase"],
+      "languages": []
+    }
+  },
+  {
+    "id": "aws",
+    "label": "AWS",
+    "category": "cloud",
+    "aliases": ["aws", "amazon web services", "s3", "ec2", "aws lambda", "dynamodb"],
+    "implies": [],
+    "related": [{ "id": "azure", "weight": 0.6 }, { "id": "gcp", "weight": 0.6 }, { "id": "terraform", "weight": 0.5 }],
+    "hints": {
+      "npm": ["@aws-sdk/client-s3", "aws-sdk"],
+      "pip": ["boto3", "botocore"],
+      "maven": ["aws-java-sdk-s3"],
+      "files": [],
+      "imports": ["import boto3", "from ['\"]@aws-sdk/"],
+      "topics": ["aws", "amazon-web-services"],
+      "languages": []
+    }
+  },
+  {
+    "id": "azure",
+    "label": "Azure",
+    "category": "cloud",
+    "aliases": ["azure", "microsoft azure"],
+    "implies": [],
+    "related": [{ "id": "aws", "weight": 0.6 }, { "id": "gcp", "weight": 0.6 }],
+    "hints": {
+      "npm": ["@azure/storage-blob", "@azure/cosmos"],
+      "pip": ["azure-storage-blob"],
+      "maven": [],
+      "files": [],
+      "imports": ["from ['\"]@azure/"],
+      "topics": ["azure"],
+      "languages": []
+    }
+  },
+  {
+    "id": "gcp",
+    "label": "Google Cloud",
+    "category": "cloud",
+    "aliases": ["gcp", "google cloud", "google cloud platform", "bigquery"],
+    "implies": [],
+    "related": [{ "id": "aws", "weight": 0.6 }, { "id": "firebase", "weight": 0.7 }],
+    "hints": {
+      "npm": ["@google-cloud/storage"],
+      "pip": ["google-cloud-storage", "google-cloud-bigquery"],
+      "maven": [],
+      "files": [],
+      "imports": ["from google.cloud import"],
+      "topics": ["gcp", "google-cloud"],
+      "languages": []
+    }
+  },
+  {
+    "id": "vercel",
+    "label": "Vercel",
+    "category": "cloud",
+    "aliases": ["vercel"],
+    "implies": [],
+    "related": [{ "id": "nextjs", "weight": 0.7 }, { "id": "netlify", "weight": 0.6 }],
+    "hints": {
+      "npm": ["vercel"],
+      "pip": [],
+      "maven": [],
+      "files": ["vercel.json"],
+      "imports": [],
+      "topics": ["vercel"],
+      "languages": []
+    }
+  },
+  {
+    "id": "netlify",
+    "label": "Netlify",
+    "category": "cloud",
+    "aliases": ["netlify"],
+    "implies": [],
+    "related": [{ "id": "vercel", "weight": 0.7 }],
+    "hints": {
+      "npm": ["netlify-cli"],
+      "pip": [],
+      "maven": [],
+      "files": ["netlify.toml"],
+      "imports": [],
+      "topics": ["netlify"],
+      "languages": []
+    }
+  },
+  {
+    "id": "docker",
+    "label": "Docker",
+    "category": "devops",
+    "aliases": ["docker", "docker compose", "dockerfile", "containerization"],
+    "implies": [],
+    "related": [{ "id": "kubernetes", "weight": 0.8 }, { "id": "cicd", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["Dockerfile", "docker-compose.yml", "docker-compose.yaml", "compose.yaml", "compose.yml"],
+      "imports": [],
+      "topics": ["docker", "containers"],
+      "languages": ["Dockerfile"]
+    }
+  },
+  {
+    "id": "kubernetes",
+    "label": "Kubernetes",
+    "category": "devops",
+    "aliases": ["kubernetes", "k8s"],
+    "implies": ["docker"],
+    "related": [{ "id": "docker", "weight": 0.8 }, { "id": "helm", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": ["apiVersion: apps/v1"],
+      "topics": ["kubernetes", "k8s"],
+      "languages": []
+    }
+  },
+  {
+    "id": "helm",
+    "label": "Helm",
+    "category": "devops",
+    "aliases": ["helm", "helm charts"],
+    "implies": ["kubernetes"],
+    "related": [{ "id": "kubernetes", "weight": 0.9 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["Chart.yaml"],
+      "imports": [],
+      "topics": ["helm"],
+      "languages": []
+    }
+  },
+  {
+    "id": "terraform",
+    "label": "Terraform",
+    "category": "devops",
+    "aliases": ["terraform", "hcl", "infrastructure as code", "iac"],
+    "implies": [],
+    "related": [{ "id": "aws", "weight": 0.6 }, { "id": "ansible", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [".*\\.tf$"],
+      "imports": ["provider ['\"]aws['\"]"],
+      "topics": ["terraform", "iac"],
+      "languages": ["HCL"]
+    }
+  },
+  {
+    "id": "ansible",
+    "label": "Ansible",
+    "category": "devops",
+    "aliases": ["ansible", "ansible playbooks"],
+    "implies": [],
+    "related": [{ "id": "terraform", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": ["ansible"],
+      "maven": [],
+      "files": ["playbook.yml"],
+      "imports": [],
+      "topics": ["ansible"],
+      "languages": []
+    }
+  },
+  {
+    "id": "cicd",
+    "label": "CI/CD",
+    "category": "devops",
+    "aliases": ["ci/cd", "ci cd", "continuous integration", "github actions", "continuous delivery", "jenkins", "gitlab ci"],
+    "implies": [],
+    "related": [{ "id": "docker", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [".github/workflows/.*\\.ya?ml$", "Jenkinsfile", ".gitlab-ci.yml"],
+      "imports": [],
+      "topics": ["ci-cd", "github-actions"],
+      "languages": []
+    }
+  },
+  {
+    "id": "nginx",
+    "label": "Nginx",
+    "category": "devops",
+    "aliases": ["nginx", "reverse proxy"],
+    "implies": [],
+    "related": [{ "id": "docker", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["nginx.conf"],
+      "imports": [],
+      "topics": ["nginx"],
+      "languages": []
+    }
+  },
+  {
+    "id": "linux",
+    "label": "Linux",
+    "category": "tool",
+    "aliases": ["linux", "ubuntu", "debian", "centos", "redhat", "unix"],
+    "implies": [],
+    "related": [{ "id": "bash", "weight": 0.8 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": [],
+      "topics": ["linux"],
+      "languages": []
+    }
+  },
+  {
+    "id": "git",
+    "label": "Git",
+    "category": "tool",
+    "aliases": ["git", "version control", "github", "gitlab"],
+    "implies": [],
+    "related": [{ "id": "cicd", "weight": 0.5 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [".gitignore"],
+      "imports": [],
+      "topics": ["git"],
+      "languages": []
+    }
+  },
+  {
+    "id": "jest",
+    "label": "Jest",
+    "category": "testing",
+    "aliases": ["jest", "jestjs"],
+    "implies": ["javascript", "testing"],
+    "related": [{ "id": "vitest", "weight": 0.8 }, { "id": "react", "weight": 0.5 }],
+    "hints": {
+      "npm": ["jest", "@jest/core", "ts-jest", "babel-jest"],
+      "pip": [],
+      "maven": [],
+      "files": ["jest.config.js", "jest.config.ts"],
+      "imports": ["from ['\"]@jest/globals['\"]"],
+      "topics": ["jest"],
+      "languages": []
+    }
+  },
+  {
+    "id": "vitest",
+    "label": "Vitest",
+    "category": "testing",
+    "aliases": ["vitest"],
+    "implies": ["javascript", "testing"],
+    "related": [{ "id": "jest", "weight": 0.8 }, { "id": "vite", "weight": 0.7 }],
+    "hints": {
+      "npm": ["vitest"],
+      "pip": [],
+      "maven": [],
+      "files": ["vitest.config.js", "vitest.config.ts"],
+      "imports": ["from ['\"]vitest['\"]"],
+      "topics": ["vitest"],
+      "languages": []
+    }
+  },
+  {
+    "id": "pytest",
+    "label": "Pytest",
+    "category": "testing",
+    "aliases": ["pytest"],
+    "implies": ["python", "testing"],
+    "related": [{ "id": "python", "weight": 0.8 }],
+    "hints": {
+      "npm": [],
+      "pip": ["pytest"],
+      "maven": [],
+      "files": ["pytest.ini", "conftest.py"],
+      "imports": ["import pytest"],
+      "topics": ["pytest"],
+      "languages": []
+    }
+  },
+  {
+    "id": "mocha",
+    "label": "Mocha",
+    "category": "testing",
+    "aliases": ["mocha", "mochajs"],
+    "implies": ["javascript", "testing"],
+    "related": [{ "id": "chai", "weight": 0.9 }],
+    "hints": {
+      "npm": ["mocha"],
+      "pip": [],
+      "maven": [],
+      "files": [".mocharc.json", ".mocharc.js"],
+      "imports": ["from ['\"]mocha['\"]"],
+      "topics": ["mocha"],
+      "languages": []
+    }
+  },
+  {
+    "id": "cypress",
+    "label": "Cypress",
+    "category": "testing",
+    "aliases": ["cypress", "cypress.io"],
+    "implies": ["javascript", "testing"],
+    "related": [{ "id": "playwright", "weight": 0.7 }],
+    "hints": {
+      "npm": ["cypress"],
+      "pip": [],
+      "maven": [],
+      "files": ["cypress.config.js", "cypress.config.ts", "cypress.json"],
+      "imports": ["from ['\"]cypress['\"]"],
+      "topics": ["cypress"],
+      "languages": []
+    }
+  },
+  {
+    "id": "playwright",
+    "label": "Playwright",
+    "category": "testing",
+    "aliases": ["playwright"],
+    "implies": ["testing"],
+    "related": [{ "id": "cypress", "weight": 0.7 }],
+    "hints": {
+      "npm": ["@playwright/test", "playwright"],
+      "pip": ["playwright"],
+      "maven": [],
+      "files": ["playwright.config.js", "playwright.config.ts"],
+      "imports": ["from ['\"]@playwright/test['\"]"],
+      "topics": ["playwright"],
+      "languages": []
+    }
+  },
+  {
+    "id": "testing",
+    "label": "Automated Testing",
+    "category": "concept",
+    "aliases": ["unit testing", "automated testing", "integration testing", "unit tests", "test driven development", "tdd", "e2e testing"],
+    "implies": [],
+    "related": [{ "id": "jest", "weight": 0.6 }, { "id": "pytest", "weight": 0.6 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": [],
+      "topics": ["testing", "tdd"],
+      "languages": []
+    }
+  },
+  {
+    "id": "pandas",
+    "label": "Pandas",
+    "category": "data-ml",
+    "aliases": ["pandas library", "pandas dataframes"],
+    "implies": ["python"],
+    "related": [{ "id": "numpy", "weight": 0.85 }, { "id": "python", "weight": 0.9 }],
+    "hints": {
+      "npm": [],
+      "pip": ["pandas"],
+      "maven": [],
+      "files": [],
+      "imports": ["import pandas as pd", "import pandas"],
+      "topics": ["pandas"],
+      "languages": []
+    }
+  },
+  {
+    "id": "numpy",
+    "label": "NumPy",
+    "category": "data-ml",
+    "aliases": ["numpy", "numpy arrays"],
+    "implies": ["python"],
+    "related": [{ "id": "pandas", "weight": 0.85 }, { "id": "scipy", "weight": 0.8 }],
+    "hints": {
+      "npm": [],
+      "pip": ["numpy"],
+      "maven": [],
+      "files": [],
+      "imports": ["import numpy as np", "import numpy"],
+      "topics": ["numpy"],
+      "languages": []
+    }
+  },
+  {
+    "id": "tensorflow",
+    "label": "TensorFlow",
+    "category": "data-ml",
+    "aliases": ["tensorflow", "tf", "keras"],
+    "implies": ["python"],
+    "related": [{ "id": "pytorch", "weight": 0.8 }],
+    "hints": {
+      "npm": ["@tensorflow/tfjs"],
+      "pip": ["tensorflow", "keras"],
+      "maven": [],
+      "files": [],
+      "imports": ["import tensorflow as tf", "from tensorflow"],
+      "topics": ["tensorflow", "deep-learning"],
+      "languages": []
+    }
+  },
+  {
+    "id": "pytorch",
+    "label": "PyTorch",
+    "category": "data-ml",
+    "aliases": ["pytorch", "torch"],
+    "implies": ["python"],
+    "related": [{ "id": "tensorflow", "weight": 0.8 }],
+    "hints": {
+      "npm": [],
+      "pip": ["torch", "torchvision"],
+      "maven": [],
+      "files": [],
+      "imports": ["import torch"],
+      "topics": ["pytorch", "deep-learning"],
+      "languages": []
+    }
+  },
+  {
+    "id": "scikitlearn",
+    "label": "Scikit-Learn",
+    "category": "data-ml",
+    "aliases": ["scikit-learn", "sklearn"],
+    "implies": ["python", "numpy"],
+    "related": [{ "id": "pandas", "weight": 0.7 }, { "id": "numpy", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": ["scikit-learn", "sklearn"],
+      "maven": [],
+      "files": [],
+      "imports": ["import sklearn", "from sklearn\\."],
+      "topics": ["scikit-learn", "machine-learning"],
+      "languages": []
+    }
+  },
+  {
+    "id": "spark",
+    "label": "Apache Spark",
+    "category": "data-ml",
+    "aliases": ["apache spark", "spark", "pyspark"],
+    "implies": [],
+    "related": [{ "id": "hadoop", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": ["pyspark"],
+      "maven": ["spark-core"],
+      "files": [],
+      "imports": ["from pyspark import"],
+      "topics": ["spark", "apache-spark"],
+      "languages": []
+    }
+  },
+  {
+    "id": "kafka",
+    "label": "Apache Kafka",
+    "category": "data-ml",
+    "aliases": ["kafka", "apache kafka"],
+    "implies": [],
+    "related": [{ "id": "rabbitmq", "weight": 0.7 }],
+    "hints": {
+      "npm": ["kafkajs"],
+      "pip": ["confluent-kafka", "kafka-python"],
+      "maven": ["kafka-clients"],
+      "files": [],
+      "imports": ["from ['\"]kafkajs['\"]"],
+      "topics": ["kafka"],
+      "languages": []
+    }
+  },
+  {
+    "id": "rabbitmq",
+    "label": "RabbitMQ",
+    "category": "backend",
+    "aliases": ["rabbitmq", "amqp"],
+    "implies": [],
+    "related": [{ "id": "kafka", "weight": 0.7 }],
+    "hints": {
+      "npm": ["amqplib"],
+      "pip": ["pika"],
+      "maven": ["amqp-client"],
+      "files": [],
+      "imports": ["from ['\"]amqplib['\"]"],
+      "topics": ["rabbitmq"],
+      "languages": []
+    }
+  },
+  {
+    "id": "reactnative",
+    "label": "React Native",
+    "category": "mobile",
+    "aliases": ["react native", "react-native"],
+    "implies": ["react", "javascript"],
+    "related": [{ "id": "flutter", "weight": 0.7 }, { "id": "react", "weight": 0.9 }],
+    "hints": {
+      "npm": ["react-native", "expo"],
+      "pip": [],
+      "maven": [],
+      "files": ["app.json", "metro.config.js"],
+      "imports": ["from ['\"]react-native['\"]"],
+      "topics": ["react-native", "mobile"],
+      "languages": []
+    }
+  },
+  {
+    "id": "flutter",
+    "label": "Flutter",
+    "category": "mobile",
+    "aliases": ["flutter", "flutter sdk"],
+    "implies": ["dart"],
+    "related": [{ "id": "dart", "weight": 0.95 }, { "id": "reactnative", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["pubspec.yaml"],
+      "imports": ["import 'package:flutter/"],
+      "topics": ["flutter", "mobile"],
+      "languages": []
+    }
+  },
+  {
+    "id": "android",
+    "label": "Android",
+    "category": "mobile",
+    "aliases": ["android development", "android sdk", "android apps"],
+    "implies": [],
+    "related": [{ "id": "kotlin", "weight": 0.8 }, { "id": "java", "weight": 0.7 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": ["AndroidManifest.xml"],
+      "imports": ["import android\\."],
+      "topics": ["android"],
+      "languages": []
+    }
+  },
+  {
+    "id": "ios",
+    "label": "iOS",
+    "category": "mobile",
+    "aliases": ["ios development", "ios apps", "uikit", "swiftui"],
+    "implies": [],
+    "related": [{ "id": "swift", "weight": 0.9 }],
+    "hints": {
+      "npm": [],
+      "pip": [],
+      "maven": [],
+      "files": [],
+      "imports": ["import SwiftUI", "import UIKit"],
+      "topics": ["ios"],
+      "languages": []
+    }
+  }
+]
