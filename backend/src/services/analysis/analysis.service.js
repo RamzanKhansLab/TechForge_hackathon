@@ -26,6 +26,40 @@ export async function retryAnalysis(id, token) {
   if (!updated) throw new AppError(409, 'ALREADY_RETRIED', 'This analysis is already queued.');
   return publicDocument(updated);
 }
+export async function reanalyze(id, token) {
+  const current = await getAnalysis(id, token);
+  if (['processing', 'queued'].includes(current.status)) {
+    throw new AppError(409, 'ANALYSIS_BUSY', 'Wait for the current analysis to finish before initiating re-analysis.');
+  }
+
+  // Find previous completed analysis for the same user / reportId to link
+  const previous = await Analysis.findOne({
+    reportId: current.reportId || current._id,
+    status: 'completed',
+    _id: { $ne: current._id }
+  }).sort({ createdAt: -1 });
+
+  const { accessToken, accessTokenHash } = newAccess();
+  const nextAnalysis = await Analysis.create({
+    reportId: current.reportId || current._id,
+    previousAnalysisId: current._id,
+    githubUsername: current.githubUsername,
+    candidate: current.candidate,
+    resume: current.resume,
+    accessTokenHash,
+    status: 'queued',
+    stage: 'queued',
+    progress: 0
+  });
+
+  logger.info('reanalysis_queued', {
+    newAnalysisId: String(nextAnalysis._id),
+    previousAnalysisId: String(current._id)
+  });
+
+  return { analysisId: nextAnalysis._id, status: nextAnalysis.status, accessToken };
+}
+
 export async function removeAnalysis(id, token) {
   const analysis = await getAnalysis(id, token);
   if (['processing','queued'].includes(analysis.status)) throw new AppError(409, 'ANALYSIS_BUSY', 'Wait for analysis to finish before deleting it.');
@@ -33,3 +67,4 @@ export async function removeAnalysis(id, token) {
   await JobAnalysis.deleteMany({ analysisId: id });
   await Analysis.deleteOne({ _id: id });
 }
+

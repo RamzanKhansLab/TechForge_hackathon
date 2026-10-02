@@ -24,7 +24,10 @@ router.get('/analysis/:id/skills', analysis.skills);
 router.get('/analysis/:id/skills/:skill', analysis.skill);
 router.get('/analysis/:id/repositories', analysis.repositories);
 router.post('/analysis/:id/retry', analysisLimit, analysis.retry);
+router.post('/analysis/:id/reanalyze', analysisLimit, analysis.reanalyze);
+router.get('/analysis/:id/diff', analysis.diff);
 router.delete('/analysis/:id', analysis.remove);
+
 router.post('/jobs/analyze', jobLimit, jobs.create);
 router.use('/jobs/:id', validateId);
 router.get('/jobs/:id', jobs.read);

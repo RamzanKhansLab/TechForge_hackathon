@@ -58,6 +58,8 @@ const schema = new Schema({
     totalUsed: { type: Number, default: 0 },
     remaining: { type: Number, default: 120 }
   },
+  previousAnalysisId: { type: Schema.Types.ObjectId, ref: 'Analysis', default: null },
+  diff: { type: Schema.Types.Mixed, default: null },
   status: { type: String, enum: ['queued', 'processing', 'completed', 'failed'], default: 'queued', required: true },
   stage: { type: String, default: 'queued' }, progress: { type: Number, default: 0 },
   error: { code: String, message: String }, scoringVersion: String,
@@ -67,4 +69,5 @@ const schema = new Schema({
 schema.index({ status: 1, leaseUntil: 1, createdAt: 1 });
 schema.index({ githubUsername: 1, createdAt: -1 });
 schema.index({ reportId: 1, createdAt: -1 });
+schema.index({ previousAnalysisId: 1 });
 export const Analysis = mongoose.model('Analysis', schema);

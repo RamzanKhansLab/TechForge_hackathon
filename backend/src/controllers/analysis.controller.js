@@ -14,4 +14,10 @@ export async function skill(req,res) {
 }
 export async function repositories(req,res) { const analysis = await service.getAnalysis(req.params.id,token(req)); res.json({ success: true, data: analysis.repositories }); }
 export async function retry(req,res) { res.status(202).json({ success: true, data: await service.retryAnalysis(req.params.id,token(req)) }); }
+export async function reanalyze(req,res) { res.status(202).json({ success: true, data: await service.reanalyze(req.params.id,token(req)) }); }
+export async function diff(req,res) {
+  const analysis = await service.getAnalysis(req.params.id, token(req));
+  res.json({ success: true, data: analysis.diff || null });
+}
 export async function remove(req,res) { await service.removeAnalysis(req.params.id,token(req)); res.json({ success: true, data: { deleted: true } }); }
+

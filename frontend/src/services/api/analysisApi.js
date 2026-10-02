@@ -8,5 +8,8 @@ export const analysisApi = {
   skill: (id,skill,signal) => client.get(`/analysis/${id}/skills/${encodeURIComponent(skill)}`,{ ...config(id), signal }),
   repositories: (id,signal) => client.get(`/analysis/${id}/repositories`,{ ...config(id), signal }),
   retry: id => client.post(`/analysis/${id}/retry`,{},config(id)),
+  reanalyze: id => client.post(`/analysis/${id}/reanalyze`,{},config(id)),
+  diff: (id,signal) => client.get(`/analysis/${id}/diff`,{ ...config(id), signal }),
   remove: id => client.delete(`/analysis/${id}`,config(id)),
 };
+

@@ -11,6 +11,7 @@ import RepositoryCard from '../../components/dashboard/RepositoryCard.jsx';
 import SkillTable from '../../components/skills/SkillTable.jsx';
 import DiscrepancyReport from '../../components/dashboard/DiscrepancyReport.jsx';
 import DumbbellChart from '../../components/dashboard/DumbbellChart.jsx';
+import ReanalysisDiff from '../../components/dashboard/ReanalysisDiff.jsx';
 import { analysisApi } from '../../services/api/analysisApi.js';
 import { formatDate } from '../../utils/format.js';
 import './Dashboard.css';
@@ -22,8 +23,29 @@ export default function Dashboard() {
 
 function DashboardContent({analysis}) {
   const { summary,github,candidate } = analysis; const [error,setError] = useState(''); const [deleting,setDeleting] = useState(false);
-  const navigate = useNavigate(); const { reports,forget } = useReports();
+  const [reanalyzing, setReanalyzing] = useState(false);
+  const navigate = useNavigate(); const { reports,remember,forget } = useReports();
   const metrics = [{label:'Skills claimed',value:summary.claimed,icon:Layers,color:'neutral',note:'Extracted from the resume'},{label:'Proven skills',value:summary.proven,icon:CheckCircle2,color:'proven',note:'Meaningful public evidence'},{label:'Partial evidence',value:summary.partial,icon:CircleDashed,color:'partial',note:'Room to strengthen the signals'},{label:'Claimed-only',value:summary.claimedOnly,icon:MinusCircle,color:'neutral',note:'Evidence not yet found'}];
+
+  async function handleReanalyze() {
+    setReanalyzing(true);
+    setError('');
+    try {
+      const res = await analysisApi.reanalyze(analysis._id);
+      remember({
+        type: 'analysis',
+        id: res.data.analysisId,
+        title: `@${analysis.githubUsername}`,
+        subtitle: `${analysis.resume.filename} (Re-analysis)`,
+        token: res.data.accessToken
+      });
+      navigate(`/analysis/${res.data.analysisId}`);
+    } catch (e) {
+      setError(e.message || 'Failed to initiate re-analysis');
+      setReanalyzing(false);
+    }
+  }
+
   async function remove() {
     if (!window.confirm('Delete this report, its stored resume, and linked job analyses? This cannot be undone.')) return;
     setDeleting(true);
@@ -31,8 +53,13 @@ function DashboardContent({analysis}) {
     catch(e){setError(e.message); setDeleting(false);}
   }
   return <><PageHeading eyebrow="The work behind the words" title="Candidate overview" description="A connected view of resume claims and public repository evidence." action={<ExportKey id={analysis._id} type="analysis"/>}/>
-    <section className="candidate-banner mb-6"><div className="flex flex-wrap items-center gap-4"><div className="flex size-16 items-center justify-center rounded-2xl border border-white/20 bg-white/10 font-display text-2xl font-bold text-lime">{(candidate.name || github.login).slice(0,2).toUpperCase()}</div><div><h2 className="text-xl font-bold text-white">{candidate.name || github.name || github.login}</h2><ExternalLink href={github.url} className="mt-2 text-xs text-[#c1d1bd]"><Github size={13}/>@{github.login}</ExternalLink><p className="mt-2 text-[11px] text-[#a7bda4]">Analyzed {formatDate(analysis.completedAt)}</p></div></div><div className="flex flex-wrap items-center gap-6"><div className="border-l border-white/20 pl-5"><p className="font-display text-2xl font-bold text-lime">{summary.repositoriesAnalyzed}</p><p className="mt-1 text-[10px] text-[#c1d1bd]">Repositories inspected</p></div><Link to={`/jobs?analysis=${analysis._id}`} className="btn btn-lime text-xs"><BriefcaseBusiness size={16}/>Match to a role<ArrowUpRight size={14}/></Link></div></section>
+    <section className="candidate-banner mb-6"><div className="flex flex-wrap items-center gap-4"><div className="flex size-16 items-center justify-center rounded-2xl border border-white/20 bg-white/10 font-display text-2xl font-bold text-lime">{(candidate.name || github.login).slice(0,2).toUpperCase()}</div><div><h2 className="text-xl font-bold text-white">{candidate.name || github.name || github.login}</h2><ExternalLink href={github.url} className="mt-2 text-xs text-[#c1d1bd]"><Github size={13}/>@{github.login}</ExternalLink><p className="mt-2 text-[11px] text-[#a7bda4]">Analyzed {formatDate(analysis.completedAt)}</p></div></div><div className="flex flex-wrap items-center gap-4"><div className="border-l border-white/20 pl-5 pr-2"><p className="font-display text-2xl font-bold text-lime">{summary.repositoriesAnalyzed}</p><p className="mt-1 text-[10px] text-[#c1d1bd]">Repositories inspected</p></div><button onClick={handleReanalyze} disabled={reanalyzing} className="btn bg-white/10 hover:bg-white/20 text-white border border-white/30 text-xs">{reanalyzing ? 'Queueing…' : 'Re-analyze public work'}</button><Link to={`/jobs?analysis=${analysis._id}`} className="btn btn-lime text-xs"><BriefcaseBusiness size={16}/>Match to a role<ArrowUpRight size={14}/></Link></div></section>
+    
+    {/* If this analysis has an audit diff from re-analysis, display it prominently */}
+    {analysis.diff && <ReanalysisDiff diff={analysis.diff} />}
+
     <div className="mb-6 grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">{metrics.map(({label,value,icon:Icon,color,note}) => <article className="panel p-5" key={label}><div className="flex items-center justify-between"><p className="text-xs font-medium text-muted">{label}</p><span className={`metric-icon metric-${color}`}><Icon size={16}/></span></div><p className="my-3 font-display text-3xl font-bold tracking-tight">{value}</p><p className="text-[10px] text-muted">{note}</p></article>)}</div>
+
     <div className="mb-6 grid items-stretch gap-6 xl:grid-cols-[1fr_.8fr]"><OverviewChart summary={summary}/><div className="panel flex flex-col justify-between p-6"><div><p className="eyebrow mb-3">Beyond the resume</p><h2 className="text-xl font-bold">Let the repositories add context.</h2><p className="muted mt-3">We found <strong className="font-semibold text-ink">{summary.discovered} additional {summary.discovered === 1 ? 'skill' : 'skills'}</strong> with direct GitHub signals that weren’t listed in the resume. These are available in the skill report and job matching.</p></div><Link to={`/analysis/${analysis._id}/skills`} className="mt-5 inline-flex items-center gap-2 text-xs font-semibold">Explore the complete skill map<ArrowUpRight size={15}/></Link></div></div>
     
     {/* Experience Timeline Dumbbell Chart */}

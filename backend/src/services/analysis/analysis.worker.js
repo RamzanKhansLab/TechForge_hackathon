@@ -4,6 +4,8 @@ import { Analysis } from '../../models/Analysis.js';
 import { getProfile, getRepositories } from '../github/github.service.js';
 import { analyzeRepository } from '../github/github.repository.service.js';
 import { verifySkills } from '../evidence/evidence.service.js';
+import { generateDiscrepancyReport } from '../evidence/scoring.v2.js';
+import { computeAnalysisDiff } from './diff.service.js';
 import { SCORING } from '../../config/scoring.js';
 import { logger } from '../../utils/logger.js';
 const owner = randomUUID();
@@ -178,6 +180,19 @@ async function runAnalysis(analysis) {
       trustNote: budget.isLimited ? 'Partial evidence collected due to GitHub API rate limits.' : 'Full code-level evidence verified.'
     };
 
+    // 8. If this is a re-analysis or has a previous run, compute the audit diff
+    let diff = null;
+    if (analysis.previousAnalysisId) {
+      try {
+        const prev = await Analysis.findById(analysis.previousAnalysisId);
+        if (prev) {
+          diff = computeAnalysisDiff(prev, { _id: analysis._id, skills, summary, completedAt: new Date() });
+        }
+      } catch (e) {
+        logger.warn('diff_computation_failed', { analysisId: String(analysis._id) });
+      }
+    }
+
     await update({ stage: 'report', progress: 95 });
     await Analysis.updateOne(filter, {
       $set: {
@@ -189,6 +204,7 @@ async function runAnalysis(analysis) {
         skills,
         summary,
         discrepancyReport,
+        diff,
         warnings,
         events,
         partialEvidence: budget.isLimited,
@@ -201,6 +217,7 @@ async function runAnalysis(analysis) {
       $unset: { leaseOwner: 1, leaseUntil: 1, error: 1 }
     });
     logger.info('analysis_completed', { analysisId: String(analysis._id), repositories: repositories.length });
+
   } catch (error) {
     await Analysis.updateOne(filter, {
       $set: {
