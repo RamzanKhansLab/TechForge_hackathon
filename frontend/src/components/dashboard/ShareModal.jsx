@@ -16,6 +16,13 @@ export default function ShareModal({ analysis = {}, isOpen, onClose }) {
   const [copiedBadge, setCopiedBadge] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  React.useEffect(() => {
+    if (isOpen && analysis) {
+      setIsPublic(Boolean(analysis.isPublic));
+      setShareId(analysis.shareId || '');
+    }
+  }, [isOpen, analysis]);
+
   if (!isOpen || !analysis) return null;
 
   const origin = window.location.origin;
@@ -33,8 +40,9 @@ export default function ShareModal({ analysis = {}, isOpen, onClose }) {
     try {
       const nextState = !isPublic;
       const res = await analysisApi.share(analysis._id, nextState);
-      setIsPublic(res.data.isPublic);
-      setShareId(res.data.shareId || '');
+      const data = res?.data || res;
+      setIsPublic(Boolean(data?.isPublic));
+      setShareId(data?.shareId || '');
     } catch (e) {
       alert(e.message || 'Failed to update share visibility');
     } finally {
@@ -51,12 +59,15 @@ export default function ShareModal({ analysis = {}, isOpen, onClose }) {
   async function handleDownloadExport() {
     try {
       const res = await analysisApi.exportData(analysis._id);
-      const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: 'application/json' });
+      const exportJson = res?.data || res;
+      const blob = new Blob([JSON.stringify(exportJson, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `skillproof-audit-${analysis.githubUsername}-${Date.now()}.json`;
+      a.download = `skillproof-audit-${analysis.githubUsername || 'report'}-${Date.now()}.json`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (e) {
       alert(e.message || 'Failed to generate audit export');

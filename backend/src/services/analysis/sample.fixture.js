@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import { Analysis } from '../models/Analysis.js';
-import { newAccess, publicDocument } from '../utils/access.js';
+import { createHash } from 'node:crypto';
+import { Analysis } from '../../models/Analysis.js';
+import { newAccess, publicDocument } from '../../utils/access.js';
 
 export const SAMPLE_CANDIDATE_DATA = {
   githubUsername: 'demo-engineer',
@@ -290,6 +291,10 @@ export const SAMPLE_CANDIDATE_DATA = {
   completedAt: new Date()
 };
 
+// 64-character hex access token for demo reports
+const DEMO_ACCESS_TOKEN = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const DEMO_ACCESS_TOKEN_HASH = createHash('sha256').update(DEMO_ACCESS_TOKEN).digest('hex');
+
 /**
  * Ensures a preloaded demo report exists in the database.
  * Returns public document and access token.
@@ -297,22 +302,26 @@ export const SAMPLE_CANDIDATE_DATA = {
 export async function seedDemoReport() {
   const existing = await Analysis.findOne({ githubUsername: 'demo-engineer', status: 'completed' });
   if (existing) {
+    // Ensure the existing demo report has the known demo token hash and public settings
+    await Analysis.updateOne(
+      { _id: existing._id },
+      { $set: { accessTokenHash: DEMO_ACCESS_TOKEN_HASH, isPublic: true, shareId: existing.shareId || 'demo-sample-audit' } }
+    );
     return {
       analysisId: existing._id,
-      shareId: existing.shareId,
-      accessToken: 'demo-access-token-authenticated'
+      shareId: existing.shareId || 'demo-sample-audit',
+      accessToken: DEMO_ACCESS_TOKEN
     };
   }
 
-  const { accessToken, accessTokenHash } = newAccess();
   const report = await Analysis.create({
     ...SAMPLE_CANDIDATE_DATA,
-    accessTokenHash
+    accessTokenHash: DEMO_ACCESS_TOKEN_HASH
   });
 
   return {
     analysisId: report._id,
     shareId: report.shareId,
-    accessToken
+    accessToken: DEMO_ACCESS_TOKEN
   };
 }
