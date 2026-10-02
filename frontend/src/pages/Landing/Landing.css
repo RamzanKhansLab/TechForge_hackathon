@@ -1,0 +1,10 @@
+.landing { background: #fafbf6; }
+.hero-heading { font-size: clamp(3.1rem, 5.4vw, 5rem); line-height: 1.08; font-weight: 750; letter-spacing: -.055em; }
+.hero-mark { position: relative; isolation: isolate; white-space: nowrap; }
+.hero-mark::after { content: ''; position: absolute; left: -3px; right: -5px; bottom: 7px; height: 22%; z-index: -1; background: #c3f27b; transform: rotate(-1.8deg); }
+.evidence-visual { max-width: 490px; width: 100%; margin: auto; padding: 28px; border-radius: 22px; background-color: #1e392a; background-image: radial-gradient(#5c784547 .8px,transparent .8px); background-size: 18px 18px; box-shadow: 0 20px 65px #183b2d13; transform: rotate(1deg); }
+.visual-source { background: #fffefa; border: 1px solid #ffffff40; border-radius: 13px; padding: 20px; }
+.visual-chip { border: 1px solid #e1e7d9; background: #f7f8f3; border-radius: 6px; padding: 5px 10px; font-size: 10px; color: #6c7771; }
+.trail-connector { display: flex; flex-direction: column; align-items: center; gap: 4px; height: 55px; color: #bddc9f; justify-content: center; }
+.trail-connector span { width: 1px; flex: 1; background: #789467; }
+@media(max-width:640px) { .evidence-visual { padding: 20px; transform: none; } .hero-heading { font-size: 3.4rem; } }

@@ -1,0 +1,3 @@
+export const formatDate = value => value ? new Intl.DateTimeFormat(undefined,{ month:'short',day:'numeric',year:'numeric' }).format(new Date(value)) : 'Not available';
+export const skillLabel = id => ({ nodejs:'Node.js',nextjs:'Next.js',cicd:'CI/CD',cpp:'C++',csharp:'C#',aws:'AWS',gcp:'Google Cloud',html:'HTML',css:'CSS',postgresql:'PostgreSQL',mongodb:'MongoDB',socketio:'Socket.IO',scikitlearn:'Scikit-learn' }[id] || id.replace(/^\w/,c => c.toUpperCase()));
+export const safeUrl = value => { try { const url = new URL(value); return ['https:','http:'].includes(url.protocol) ? url.href : undefined; } catch { return undefined; } };

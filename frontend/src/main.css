@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap');
+@import 'tailwindcss';
+@theme {
+  --font-sans: 'DM Sans', sans-serif;
+  --font-display: 'Manrope', sans-serif;
+  --color-ink: #1d3028;
+  --color-muted: #6c7771;
+  --color-paper: #f6f7f3;
+  --color-line: #e3e7de;
+  --color-forest: #183b2d;
+  --color-lime: #c3f27b;
+}
+@layer base {
+  * { box-sizing: border-box; }
+  body { margin: 0; color: var(--color-ink); background: var(--color-paper); -webkit-font-smoothing: antialiased; }
+  button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+  button, a { touch-action: manipulation; }
+  button:not(:disabled), select { cursor: pointer; }
+  button:disabled { cursor: not-allowed; opacity: .55; }
+  :focus-visible { outline: 3px solid #75a943; outline-offset: 4px; }
+  h1,h2,h3 { font-family: var(--font-display); }
+  ::selection { background: #d4f5a6; color: #173326; }
+}
+@layer components {
+  .btn { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-colors; }
+  .btn-primary { @apply bg-forest text-white hover:bg-[#29573f]; }
+  .btn-lime { @apply bg-lime text-forest hover:bg-[#d4ffa0]; }
+  .btn-secondary { @apply border border-line bg-white text-ink hover:bg-paper; }
+  .btn-ghost { @apply text-muted hover:bg-white hover:text-ink; }
+  .panel { @apply rounded-2xl border border-line bg-white; }
+  .input { @apply w-full rounded-xl border border-[#d9dfd5] bg-white px-4 py-3 text-sm outline-none transition focus:border-[#6e944e] focus:ring-2 focus:ring-[#d3e6bf]; }
+  .label { @apply mb-2 block text-sm font-semibold; }
+  .eyebrow { @apply text-[11px] font-bold uppercase tracking-[.17em] text-muted; }
+  .page-title { @apply font-display text-3xl font-bold tracking-[-.04em] sm:text-4xl; }
+  .muted { @apply text-sm leading-relaxed text-muted; }
+}
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media print { .no-print { display: none !important; } body { background: white; } }

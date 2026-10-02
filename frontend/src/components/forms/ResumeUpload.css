@@ -1,0 +1,2 @@
+.resume-drop { border: 1.5px dashed #d4deca; padding: 23px; border-radius: 13px; background: #f9fbf6; transition: border-color .15s,background .15s; }
+.resume-drop:focus-within,.resume-dragging { border-color: #658748; background: #eef5e7; }

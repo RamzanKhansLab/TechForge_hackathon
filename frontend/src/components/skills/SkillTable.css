@@ -1,0 +1,8 @@
+.skill-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
+.skill-table th { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; font-weight: 550; color: #778072; background: #fbfcf8; padding: 13px 22px; }
+.skill-table td { border-top: 1px solid #edf0e8; padding: 16px 22px; font-size: 13px; }
+.skill-table tbody tr:hover { background: #fcfdf9; }
+.score-track { display: inline-block; height: 5px; width: 72px; background: #edf0e7; border-radius: 5px; overflow: hidden; }
+.score-fill { display: block; height: 100%; background: #86ad63; border-radius: 5px; }
+.score-partial { background: #dfba64; }
+@media(max-width:640px) { .skill-table th,.skill-table td { padding: 14px; } .score-track { width: 40px; } }

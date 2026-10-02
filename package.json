@@ -1,0 +1,12 @@
+{
+  "name": "skillproof", "version": "1.0.0", "private": true,
+  "description": "Verify skills through evidence, not claims.",
+  "engines": { "node": ">=22.14.0" },
+  "scripts": {
+    "setup": "npm install --prefix backend && npm install --prefix frontend",
+    "dev": "concurrently -n API,WEB -c green,blue \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "build": "npm run build --prefix frontend",
+    "start": "npm start --prefix backend"
+  },
+  "devDependencies": { "concurrently": "^9.2.1" }
+}

@@ -1,0 +1,35 @@
+import path from 'node:path';
+import { Analysis } from '../../models/Analysis.js';
+import { JobAnalysis } from '../../models/JobAnalysis.js';
+import { newAccess, authorize, publicDocument } from '../../utils/access.js';
+import { AppError } from '../../utils/AppError.js';
+import { uploadResume, deleteResume } from '../storage/cloudinary.service.js';
+import { parseResume } from '../resume/resume.service.js';
+import { logger } from '../../utils/logger.js';
+export async function createAnalysis(file, githubUsername) {
+  if (!file) throw new AppError(400, 'RESUME_REQUIRED', 'Upload a PDF resume.');
+  if (file.buffer.subarray(0,5).toString() !== '%PDF-') throw new AppError(400, 'INVALID_PDF', 'Upload a valid PDF document.');
+  const asset = await uploadResume(file.buffer);
+  try {
+    const parsed = await parseResume(file.buffer);
+    const { accessToken, accessTokenHash } = newAccess();
+    const analysis = await Analysis.create({ githubUsername, accessTokenHash, ...parsed, resume: { ...parsed.resume, filename: path.basename(file.originalname).slice(0,120), asset } });
+    logger.info('analysis_queued', { analysisId: String(analysis._id) });
+    return { analysisId: analysis._id, status: analysis.status, accessToken };
+  } catch (error) { await deleteResume(asset).catch(() => logger.error('upload_rollback_failed')); throw error; }
+}
+export async function getAnalysis(id, token) { return authorize(await Analysis.findById(id).select('+accessTokenHash'), token); }
+export async function retryAnalysis(id, token) {
+  const analysis = await getAnalysis(id, token);
+  if (analysis.status !== 'failed') throw new AppError(409, 'ANALYSIS_NOT_FAILED', 'Only a failed analysis can be retried.');
+  const updated = await Analysis.findOneAndUpdate({ _id: id, status: 'failed' }, { $set: { status: 'queued', stage: 'queued', progress: 0, attempts: 0 }, $unset: { error: 1, leaseOwner: 1, leaseUntil: 1 } }, { new: true });
+  if (!updated) throw new AppError(409, 'ALREADY_RETRIED', 'This analysis is already queued.');
+  return publicDocument(updated);
+}
+export async function removeAnalysis(id, token) {
+  const analysis = await getAnalysis(id, token);
+  if (['processing','queued'].includes(analysis.status)) throw new AppError(409, 'ANALYSIS_BUSY', 'Wait for analysis to finish before deleting it.');
+  await deleteResume(analysis.resume.asset);
+  await JobAnalysis.deleteMany({ analysisId: id });
+  await Analysis.deleteOne({ _id: id });
+}

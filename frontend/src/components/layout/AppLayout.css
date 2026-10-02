@@ -1,0 +1,9 @@
+.app-sidebar { position: fixed; inset: 0 auto 0 0; z-index: 40; width: 250px; display: flex; flex-direction: column; padding: 32px 22px 24px; background: #182f24; overflow-y: auto; }
+.app-content { margin-left: 250px; }
+.sidebar-link { display: flex; align-items: center; gap: 13px; padding: 13px 14px; border-radius: 9px; color: #b3c1b7; font-size: 13px; transition: background .15s; }
+.sidebar-link:hover { background: #294132; color: white; }
+.sidebar-link-active { background: #c3f27b !important; color: #203526 !important; font-weight: 650; }
+.skip-link { position: fixed; top: -100px; left: 20px; z-index: 100; background: white; padding: 14px; }
+.skip-link:focus { top: 12px; }
+@media(max-width:1023px) { .app-sidebar { transform: translateX(-100%); transition: transform .18s ease; } .sidebar-open { transform: translateX(0); } .app-content { margin-left: 0; } }
+@media print { .app-content { margin-left: 0; } }
