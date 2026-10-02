@@ -12,8 +12,10 @@ const Jobs = lazy(() => import('./pages/Jobs/Jobs.jsx'));
 const JobDetail = lazy(() => import('./pages/JobDetail/JobDetail.jsx'));
 const Reports = lazy(() => import('./pages/Reports/Reports.jsx'));
 const Methodology = lazy(() => import('./pages/Methodology/Methodology.jsx'));
+const UiKitShowcase = lazy(() => import('./pages/UiKit/UiKitShowcase.jsx'));
 const SharedProfile = lazy(() => import('./pages/SharedProfile/SharedProfile.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound.jsx'));
+
 export default function App() {
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo(0,0); document.title = `${pathname === '/' ? 'Evidence over claims' : pathname === '/ui-kit' ? 'Audit Ledger UI Kit' : pathname.startsWith('/jobs') ? 'Job matching' : pathname === '/analyze' ? 'Analyze a candidate' : pathname.startsWith('/share') ? 'Verified Candidate Ledger' : 'Your evidence workspace'} · SkillProof`; },[pathname]);
