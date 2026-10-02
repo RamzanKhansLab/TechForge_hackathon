@@ -6,6 +6,7 @@ import {
   sampleSourceImports,
   evaluateReadme
 } from './github.evidence.collector.js';
+import { computeRepoTrustFlags } from '../../trust/trust.service.js';
 import { ONTOLOGY } from '../../ontology/ontology.service.js';
 import { LANGUAGE_MAP } from '../../data/skills.js';
 
@@ -67,6 +68,7 @@ export async function analyzeRepositoryV2(repo, username, budget) {
   const deploymentSignals = [];
   const testFiles = [];
   let readmeData = { readmeScore: 0 };
+  let readmeTextContent = '';
 
   // Fetch manifests & configs via raw.githubusercontent.com
   for (const entry of manifestFiles) {
@@ -75,6 +77,7 @@ export async function analyzeRepositoryV2(repo, username, budget) {
 
     // A. Readme evaluation
     if (/README(?:\.(?:md|rst|txt))?$/i.test(entry.path)) {
+      readmeTextContent = rawText;
       readmeData = evaluateReadme(rawText);
       // Check readme tech mentions
       for (const skill of ONTOLOGY) {
@@ -177,6 +180,20 @@ export async function analyzeRepositoryV2(repo, username, budget) {
     }
   }
 
+  // Compute anti-gaming trust flags
+  const { trustFlags, effectiveMultiplier } = computeRepoTrustFlags(
+    { fullName: repoFullName, name, description: repo.description, fork: repo.fork, commitCount: commits.length, is_template: repo.is_template },
+    commits,
+    allBlobs,
+    readmeTextContent
+  );
+
+  // Apply trust weight multiplier to evidence items (never dropped)
+  for (const item of evidenceItems) {
+    item.weight = Math.round((item.weight || 1.0) * effectiveMultiplier * 100) / 100;
+    if (trustFlags.length > 0) item.flagged = true;
+  }
+
   return {
     name,
     fullName: repoFullName,
@@ -196,6 +213,8 @@ export async function analyzeRepositoryV2(repo, username, budget) {
     testFilesCount: testFiles.length,
     testFilesSample: testFiles.slice(0, 5),
     readme: readmeData,
+    trustFlags,
+    trustMultiplier: effectiveMultiplier,
     evidence: evidenceItems,
     warnings
   };
