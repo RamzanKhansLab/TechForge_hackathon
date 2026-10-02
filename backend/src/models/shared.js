@@ -1,7 +1,21 @@
 import { Schema } from 'mongoose';
+
 export const evidenceSchema = new Schema({
-  skill: String, type: String, repository: String, file: String, description: String,
-  url: String, date: Date, strength: { type: String, enum: ['direct', 'supporting'] },
+  deterministicId: String,
+  skill: String,
+  skillId: String,
+  type: String,
+  repository: String,
+  repo: String,
+  file: String,
+  path: String,
+  description: String,
+  note: String,
+  url: String,
+  date: Date,
+  weight: { type: Number, default: 1.0 },
+  flagged: { type: Boolean, default: false },
+  strength: { type: String, enum: ['direct', 'supporting'] },
 }, { _id: false });
 export const skillSchema = new Schema({
   id: String, name: String, label: String, category: String, claimed: Schema.Types.Mixed,

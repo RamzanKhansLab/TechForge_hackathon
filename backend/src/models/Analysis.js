@@ -34,7 +34,22 @@ const schema = new Schema({
   },
   github: { login: String, name: String, avatarUrl: String, url: String, bio: String, publicRepos: Number, followers: Number },
   repositories: [repositorySchema], skills: [skillSchema], warnings: [String],
-  summary: { claimed: Number, proven: Number, partial: Number, claimedOnly: Number, repositoriesAnalyzed: Number, discovered: Number },
+  summary: { claimed: Number, proven: Number, partial: Number, claimedOnly: Number, repositoriesAnalyzed: Number, discovered: Number, coveragePercentage: Number, trustNote: String },
+  events: [{
+    _id: false,
+    name: { type: String, required: true },
+    startedAt: { type: Date, required: true },
+    finishedAt: { type: Date, default: null },
+    detail: { type: String, required: true },
+    counts: { type: Schema.Types.Mixed, default: {} }
+  }],
+  partialEvidence: { type: Boolean, default: false },
+  partialEvidenceReason: { type: String, default: null },
+  rateLimitResetAt: { type: Date, default: null },
+  requestBudget: {
+    totalUsed: { type: Number, default: 0 },
+    remaining: { type: Number, default: 120 }
+  },
   status: { type: String, enum: ['queued', 'processing', 'completed', 'failed'], default: 'queued', required: true },
   stage: { type: String, default: 'queued' }, progress: { type: Number, default: 0 },
   error: { code: String, message: String }, scoringVersion: String,
