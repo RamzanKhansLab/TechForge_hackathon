@@ -119,11 +119,12 @@ async function runAnalysis(analysis) {
     repositories.push(...repoResults);
 
     // 4. External Contributions Search
+    let externalPRs = [];
     if (budget.canMakeRequest(true)) {
       const extEv = await addEvent('SEARCH_EXTERNAL_PRS', `Searching public pull requests authored by @${github.login}`);
       try {
-        const extPRs = await searchExternalContributions(github.login, budget);
-        await finishEvent(extEv, { externalPRsFound: extPRs.length });
+        externalPRs = await searchExternalContributions(github.login, budget);
+        await finishEvent(extEv, { externalPRsFound: externalPRs.length });
       } catch (e) {}
     }
 
@@ -157,19 +158,24 @@ async function runAnalysis(analysis) {
     }
     await finishEvent(evPersist, { totalEvidenceItems: allEvidenceItems.length });
 
-    // 6. Skill Verification & Classification
+    // 6. Skill Verification & Classification (Scoring V2)
     await update({ stage: 'scoring', progress: 88 });
-    const skills = verifySkills(analysis.resume.skills, repositories);
-    const claimed = skills.filter(skill => skill.claimed);
+    const detailedClaims = analysis.resume?.detailedSkills || [];
+    const skills = verifySkills(analysis.resume.skills, repositories, externalPRs, detailedClaims);
+    const claimed = skills.filter(skill => Boolean(skill.claimed));
+
+    // 7. Discrepancy Findings
+    const discrepancyReport = generateDiscrepancyReport(skills, detailedClaims, repositories);
+
     const summary = {
       claimed: claimed.length,
-      proven: claimed.filter(s => s.status === 'Proven').length,
-      partial: claimed.filter(s => s.status === 'Partial').length,
-      claimedOnly: claimed.filter(s => s.status === 'Claimed-only').length,
+      proven: claimed.filter(s => s.verdict === 'Proven').length,
+      partial: claimed.filter(s => s.verdict === 'Partial').length,
+      claimedOnly: claimed.filter(s => s.verdict === 'Claimed-only').length,
       repositoriesAnalyzed: repositories.length,
       discovered: skills.filter(s => !s.claimed).length,
-      coveragePercentage: claimed.length ? Math.round((claimed.filter(s => s.status === 'Proven').length / claimed.length) * 100) : 0,
-      trustNote: budget.isLimited ? 'Partial evidence collected due to GitHub API rate limits.' : 'Full code-level evidence collected.'
+      coveragePercentage: claimed.length ? Math.round((claimed.filter(s => s.verdict === 'Proven').length / claimed.length) * 100) : 0,
+      trustNote: budget.isLimited ? 'Partial evidence collected due to GitHub API rate limits.' : 'Full code-level evidence verified.'
     };
 
     await update({ stage: 'report', progress: 95 });
@@ -182,13 +188,14 @@ async function runAnalysis(analysis) {
         repositories,
         skills,
         summary,
+        discrepancyReport,
         warnings,
         events,
         partialEvidence: budget.isLimited,
         partialEvidenceReason: budget.limitReason,
         rateLimitResetAt: budget.limitResetAt,
         requestBudget: { totalUsed: budget.usedRequests, remaining: budget.remaining },
-        scoringVersion: SCORING.version,
+        scoringVersion: '2.0',
         completedAt: new Date()
       },
       $unset: { leaseOwner: 1, leaseUntil: 1, error: 1 }

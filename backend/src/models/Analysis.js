@@ -46,6 +46,14 @@ const schema = new Schema({
   partialEvidence: { type: Boolean, default: false },
   partialEvidenceReason: { type: String, default: null },
   rateLimitResetAt: { type: Date, default: null },
+  discrepancyReport: [{
+    _id: false,
+    type: { type: String, required: true },
+    skillId: { type: String, default: null },
+    severity: { type: String, enum: ['low', 'medium', 'high', 'positive'], required: true },
+    message: { type: String, required: true },
+    evidenceLinks: [String]
+  }],
   requestBudget: {
     totalUsed: { type: Number, default: 0 },
     remaining: { type: Number, default: 120 }
