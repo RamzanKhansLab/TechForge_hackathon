@@ -29,6 +29,11 @@ export const SAMPLE_CANDIDATE_DATA = {
       { id: 'mongodb', claimedYears: 3, claimedSince: 2023 },
       { id: 'kubernetes', claimedYears: 5, claimedSince: 2021 } // intentional mismatch for discrepancy report!
     ],
+    categories: new Map([
+      ['frontend', ['javascript', 'typescript', 'react']],
+      ['backend', ['nodejs', 'express', 'redis', 'mongodb', 'postgresql']],
+      ['devops', ['docker', 'kubernetes', 'aws']]
+    ]),
     experience: [
       'Senior Full Stack Engineer at Acquired Labs (2023 - Present)',
       'Built high-throughput RESTful services using Node.js, Express, and PostgreSQL.',
@@ -57,7 +62,7 @@ export const SAMPLE_CANDIDATE_DATA = {
       defaultBranch: 'main',
       stars: 38,
       updatedAt: new Date(),
-      languages: { JavaScript: 15400, TypeScript: 42000 },
+      languages: new Map(Object.entries({ JavaScript: 15400, TypeScript: 42000 })),
       commitCount: 64,
       commitsLast30Days: 12,
       commitsLast90Days: 28,
