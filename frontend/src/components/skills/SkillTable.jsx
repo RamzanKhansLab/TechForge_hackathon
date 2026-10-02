@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Search } from 'lucide-react';
+import { ArrowUpRight, Search, Eye } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Stamp } from '../../ui/index.js';
+import SkillDetailDrawer from './SkillDetailDrawer.jsx';
 import './SkillTable.css';
 
-export default function SkillTable({ skills, analysisId, compact = false }) {
+export default function SkillTable({ skills, analysisId, analysis = null, compact = false }) {
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('All');
+  const [selectedSkill, setSelectedSkill] = useState(null);
 
   const filtered = useMemo(() => skills.filter(skill =>
     `${skill.name} ${skill.category}`.toLowerCase().includes(query.toLowerCase()) &&
@@ -73,11 +75,15 @@ export default function SkillTable({ skills, analysisId, compact = false }) {
           </thead>
           <tbody>
             {(compact ? filtered.slice(0, 6) : filtered).map(skill => (
-              <tr key={skill.id} className="border-b border-[var(--color-rule,#ded7c8)] hover:bg-[var(--color-paper,#FAF7F0)]/60 transition-colors">
+              <tr
+                key={skill.id}
+                onClick={() => setSelectedSkill(skill)}
+                className="border-b border-[var(--color-rule,#ded7c8)] hover:bg-[var(--color-paper,#FAF7F0)]/80 cursor-pointer transition-colors"
+              >
                 <td className="py-3.5 px-4">
-                  <Link className="font-semibold text-sm hover:underline text-[var(--color-ink,#1a1815)] font-sans" to={`/analysis/${analysisId}/skills/${skill.id}`}>
+                  <div className="font-semibold text-sm text-[var(--color-ink,#1a1815)] font-sans">
                     {skill.name}
-                  </Link>
+                  </div>
                   <span className="mt-0.5 block font-mono text-[10px] text-[var(--color-ink-2,#4a443b)]">
                     {skill.claimed ? skill.category : `${skill.category} · Discovered via GitHub`}
                   </span>
@@ -102,13 +108,17 @@ export default function SkillTable({ skills, analysisId, compact = false }) {
                   {skill.evidence?.length || 0} {(skill.evidence?.length === 1 ? 'signal' : 'signals')}
                 </td>
                 <td className="py-3.5 px-4 text-right">
-                  <Link
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedSkill(skill);
+                    }}
                     className="inline-flex items-center justify-center size-7 border border-[var(--color-rule,#ded7c8)] text-[var(--color-ink-2,#4a443b)] hover:bg-[var(--color-paper,#FAF7F0)] hover:text-[var(--color-ink,#1a1815)]"
-                    aria-label={`View ${skill.name} evidence`}
-                    to={`/analysis/${analysisId}/skills/${skill.id}`}
+                    aria-label={`Open ${skill.name} drawer`}
                   >
                     <ArrowUpRight size={14} />
-                  </Link>
+                  </button>
                 </td>
               </tr>
             ))}
@@ -121,6 +131,14 @@ export default function SkillTable({ skills, analysisId, compact = false }) {
           {skills.length ? 'No skills match the active filter criteria.' : 'No skills or public signals were identified.'}
         </p>
       )}
+
+      {/* Slide-over Ledger Drawer */}
+      <SkillDetailDrawer
+        skill={selectedSkill}
+        analysis={analysis}
+        isOpen={Boolean(selectedSkill)}
+        onClose={() => setSelectedSkill(null)}
+      />
     </div>
   );
 }
