@@ -13,8 +13,9 @@ const catalog = {
   typescript: ['Type a complete feature','Convert one feature to TypeScript with strict checking and explicit input and output types.','Beginner','2–3 hours',['Strict TypeScript configuration','Typed API boundary','Runtime validation for external input','Build command and design notes']],
 };
 export function microTaskFor(id) {
-  const skill = SKILL_MAP[id];
+  const skill = SKILL_MAP[id] || { id, name: id.charAt(0).toUpperCase() + id.slice(1) };
   const entry = catalog[id] || [`Build a focused ${skill.name} feature`, `Add a small, useful feature using ${skill.name} to an existing project. Commit the implementation and explain the decisions and limitations.`, 'Intermediate', '2–4 hours', [`Working ${skill.name} implementation in a public repository`, 'Dependency or configuration files where applicable', 'A reproducible example showing behavior', 'README with setup steps, tradeoffs, and evidence links']];
   const [title,description,difficulty,estimatedTime,expectedOutput] = entry;
   return { skill: id, title, description, difficulty, estimatedTime, expectedOutput, status: 'todo' };
 }
+
