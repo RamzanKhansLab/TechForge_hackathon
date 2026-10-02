@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import mongoose from 'mongoose';
 import { Analysis } from '../../models/Analysis.js';
 import { getProfile, getRepositories } from '../github/github.service.js';
 import { analyzeRepository } from '../github/github.repository.service.js';
@@ -8,6 +9,19 @@ import { logger } from '../../utils/logger.js';
 const owner = randomUUID();
 const leaseMs = 120000;
 let running = false; let stopping = false; let timer;
+let consecutiveFailures = 0;
+let nextPollAt = 0;
+
+function workerErrorDetails(error) {
+  // Do not log raw database messages, connection strings, query values, or credentials.
+  const identifier = value => typeof value === 'string' && /^[a-zA-Z0-9_.-]{1,100}$/.test(value) ? value : undefined;
+  return {
+    errorName: identifier(error?.name) || 'Error',
+    errorCode: typeof error?.code === 'number' ? error.code : identifier(error?.code),
+    field: identifier(error?.path),
+    fieldType: identifier(error?.kind),
+  };
+}
 
 async function runAnalysis(analysis) {
   const filter = { _id: analysis._id, leaseOwner: owner, status: 'processing' };
@@ -43,13 +57,53 @@ async function runAnalysis(analysis) {
   } finally { clearInterval(heartbeat); }
 }
 async function tick() {
-  if (running || stopping) return;
+  if (running || stopping || Date.now() < nextPollAt) return;
   running = true;
+  let operation = 'expire_exhausted_analyses';
   try {
-    await Analysis.updateMany({ status: 'processing', leaseUntil: { $lt: new Date() }, attempts: { $gte: 3 } }, { $set: { status: 'failed', stage: 'failed', error: { code: 'WORKER_INTERRUPTED', message: 'Repeated worker interruptions. Please retry the analysis.' } }, $unset: { leaseOwner: 1, leaseUntil: 1 } }, { sanitizeFilter: false });
-    const analysis = await Analysis.findOneAndUpdate({ attempts: { $lt: 3 }, $or: [{ status: 'queued' }, { status: 'processing', leaseUntil: { $lt: new Date() } }] }, { $set: { status: 'processing', leaseOwner: owner, leaseUntil: new Date(Date.now() + leaseMs) }, $inc: { attempts: 1 } }, { new: true, sort: { createdAt: 1 }, sanitizeFilter: false });
+    const now = new Date();
+    // Global sanitizeFilter remains enabled. Only these server-built comparison
+    // conditions are trusted; per-query sanitizeFilter overrides are insufficient.
+    await Analysis.updateMany(
+      {
+        status: 'processing',
+        leaseUntil: mongoose.trusted({ $lt: now }),
+        attempts: mongoose.trusted({ $gte: 3 }),
+      },
+      {
+        $set: {
+          status: 'failed',
+          stage: 'failed',
+          error: { code: 'WORKER_INTERRUPTED', message: 'Repeated worker interruptions. Please retry the analysis.' },
+        },
+        $unset: { leaseOwner: 1, leaseUntil: 1 },
+      },
+    );
+    operation = 'claim_analysis';
+    const analysis = await Analysis.findOneAndUpdate(
+      {
+        attempts: mongoose.trusted({ $lt: 3 }),
+        $or: [
+          { status: 'queued' },
+          { status: 'processing', leaseUntil: mongoose.trusted({ $lt: now }) },
+        ],
+      },
+      {
+        $set: { status: 'processing', leaseOwner: owner, leaseUntil: new Date(Date.now() + leaseMs) },
+        $inc: { attempts: 1 },
+      },
+      { new: true, sort: { createdAt: 1 } },
+    );
+    operation = 'run_analysis';
     if (analysis) await runAnalysis(analysis);
-  } catch { logger.error('worker_tick_failed'); }
+    consecutiveFailures = 0;
+    nextPollAt = 0;
+  } catch (error) {
+    consecutiveFailures = Math.min(consecutiveFailures + 1, 5);
+    const retryInMs = Math.min(2000 * 2 ** consecutiveFailures, 60000);
+    nextPollAt = Date.now() + retryInMs;
+    logger.error('worker_tick_failed', { operation, ...workerErrorDetails(error), retryInMs });
+  }
   finally { running = false; }
 }
 export function startWorker() { timer = setInterval(tick, 2000); timer.unref(); void tick(); }
