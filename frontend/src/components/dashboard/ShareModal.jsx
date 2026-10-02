@@ -9,22 +9,24 @@ import { analysisApi } from '../../services/api/analysisApi.js';
  * 2. Dynamic embeddable SVG trust badge markdown snippet
  * 3. Cryptographically signed audit export download
  */
-export default function ShareModal({ analysis, isOpen, onClose }) {
-  const [isPublic, setIsPublic] = useState(Boolean(analysis.isPublic));
-  const [shareId, setShareId] = useState(analysis.shareId || '');
+export default function ShareModal({ analysis = {}, isOpen, onClose }) {
+  const [isPublic, setIsPublic] = useState(Boolean(analysis?.isPublic));
+  const [shareId, setShareId] = useState(analysis?.shareId || '');
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedBadge, setCopiedBadge] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  if (!isOpen) return null;
+  if (!isOpen || !analysis) return null;
 
   const origin = window.location.origin;
   const shareUrl = shareId ? `${origin}/share/${shareId}` : '';
   const provenCount = analysis.summary?.proven || 0;
   const totalCount = analysis.summary?.claimed || 0;
+  const githubUser = analysis.githubUsername || 'candidate';
 
   // Live SVG Badge Markdown snippet
-  const badgeMarkdown = `[![SkillProof: ${provenCount}/${totalCount} Verified](${origin}/api/badge/${analysis.githubUsername})](https://github.com/${analysis.githubUsername})`;
+  const badgeMarkdown = `[![SkillProof: ${provenCount}/${totalCount} Verified](${origin}/api/badge/${githubUser})](https://github.com/${githubUser})`;
+
 
   async function handleToggleShare() {
     setLoading(true);

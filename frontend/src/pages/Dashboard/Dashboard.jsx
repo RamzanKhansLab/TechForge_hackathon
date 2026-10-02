@@ -22,12 +22,24 @@ export default function Dashboard() {
   return <ReportGate resource={resource}>{analysis => <DashboardContent analysis={analysis}/>}</ReportGate>;
 }
 
-function DashboardContent({analysis}) {
-  const { summary,github,candidate } = analysis; const [error,setError] = useState(''); const [deleting,setDeleting] = useState(false);
+function DashboardContent({analysis = {}}) {
+  const summary = analysis.summary || {};
+  const github = analysis.github || {};
+  const candidate = analysis.candidate || {};
+  const resume = analysis.resume || {};
+  const repositories = analysis.repositories || [];
+  const skills = analysis.skills || [];
+  const [error,setError] = useState(''); const [deleting,setDeleting] = useState(false);
   const [reanalyzing, setReanalyzing] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const navigate = useNavigate(); const { reports,remember,forget } = useReports();
-  const metrics = [{label:'Skills claimed',value:summary.claimed,icon:Layers,color:'neutral',note:'Extracted from the resume'},{label:'Proven skills',value:summary.proven,icon:CheckCircle2,color:'proven',note:'Meaningful public evidence'},{label:'Partial evidence',value:summary.partial,icon:CircleDashed,color:'partial',note:'Room to strengthen the signals'},{label:'Claimed-only',value:summary.claimedOnly,icon:MinusCircle,color:'neutral',note:'Evidence not yet found'}];
+  const metrics = [
+    { label: 'Skills claimed', value: summary.claimed ?? 0, icon: Layers, color: 'neutral', note: 'Extracted from the resume' },
+    { label: 'Proven skills', value: summary.proven ?? 0, icon: CheckCircle2, color: 'proven', note: 'Meaningful public evidence' },
+    { label: 'Partial evidence', value: summary.partial ?? 0, icon: CircleDashed, color: 'partial', note: 'Room to strengthen the signals' },
+    { label: 'Claimed-only', value: summary.claimedOnly ?? 0, icon: MinusCircle, color: 'neutral', note: 'Evidence not yet found' }
+  ];
+
 
   async function handleReanalyze() {
     setReanalyzing(true);
@@ -97,8 +109,9 @@ function DashboardContent({analysis}) {
     {/* Audit Ledger Discrepancy & Trust Report */}
     <DiscrepancyReport report={analysis.discrepancyReport || []} />
 
-    <SkillTable analysisId={analysis._id} skills={analysis.skills} analysis={analysis} compact/>
-    <div className="mt-6 grid items-start gap-6 xl:grid-cols-[1.3fr_1fr]"><section className="panel overflow-hidden"><div className="flex items-center justify-between px-6 py-5"><h2 className="font-bold">Repositories inspected</h2><span className="text-xs text-muted">{analysis.repositories.length} repositories</span></div>{analysis.repositories.map(repo => <RepositoryCard key={repo.fullName} repository={repo}/>)}{!analysis.repositories.length && <p className="muted border-t border-line p-6">No eligible public repositories were found. Private work and forked repositories are outside this report.</p>}</section><section className="panel p-6"><div className="mb-5 flex items-center gap-2"><FileText size={17} className="text-muted"/><h2 className="font-bold">Resume snapshot</h2></div><p className="break-all text-xs text-muted">{analysis.resume.filename} · {analysis.resume.pages} pages</p>{candidate.email && <p className="mt-3 break-all text-sm">{candidate.email}</p>}{candidate.phone && <p className="mt-2 text-sm">{candidate.phone}</p>}{['experience','projects','education','certifications'].map(section => analysis.resume[section]?.length > 0 && <details key={section} className="mt-5 border-t border-line pt-4"><summary className="cursor-pointer text-xs font-semibold capitalize">{section}</summary><ul className="mt-3 space-y-2 text-xs leading-5 text-muted">{analysis.resume[section].map((line,i) => <li key={i}>{line}</li>)}</ul></details>)}<p className="mt-5 text-[11px] leading-5 text-muted">Extracted heuristically from the PDF. Layout and headings can affect accuracy.</p></section></div>
+    <SkillTable analysisId={analysis._id} skills={skills} analysis={analysis} compact/>
+    <div className="mt-6 grid items-start gap-6 xl:grid-cols-[1.3fr_1fr]"><section className="panel overflow-hidden"><div className="flex items-center justify-between px-6 py-5"><h2 className="font-bold">Repositories inspected</h2><span className="text-xs text-muted">{repositories.length} repositories</span></div>{repositories.map(repo => <RepositoryCard key={repo.fullName} repository={repo}/>)}{!repositories.length && <p className="muted border-t border-line p-6">No eligible public repositories were found. Private work and forked repositories are outside this report.</p>}</section><section className="panel p-6"><div className="mb-5 flex items-center gap-2"><FileText size={17} className="text-muted"/><h2 className="font-bold">Resume snapshot</h2></div><p className="break-all text-xs text-muted">{resume?.filename || 'Uploaded Resume'} · {resume?.pages || 1} pages</p>{candidate?.email && <p className="mt-3 break-all text-sm">{candidate.email}</p>}{candidate?.phone && <p className="mt-2 text-sm">{candidate.phone}</p>}{['experience','projects','education','certifications'].map(section => (resume[section]?.length > 0) && <details key={section} className="mt-5 border-t border-line pt-4"><summary className="cursor-pointer text-xs font-semibold capitalize">{section}</summary><ul className="mt-3 space-y-2 text-xs leading-5 text-muted">{resume[section].map((line,i) => <li key={i}>{line}</li>)}</ul></details>)}<p className="mt-5 text-[11px] leading-5 text-muted">Extracted heuristically from the PDF. Layout and headings can affect accuracy.</p></section></div>
     <div className="mt-6"><Note>Proven means the available signals meet the configured evidence threshold. Repository ownership, declarations, and activity do not independently establish authorship or expertise. <Link to="/methodology" className="underline">See scoring details.</Link></Note></div>{error && <div className="mt-4"><ErrorNotice error={error}/></div>}<div className="no-print mt-6 flex justify-end"><button className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-muted hover:bg-red-50 hover:text-red-700" disabled={deleting} onClick={remove}><Trash2 size={14}/>{deleting ? 'Deleting…' : 'Delete report and resume'}</button></div>
   </>;
+
 }
