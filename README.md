@@ -1,153 +1,191 @@
 # SkillProof
 
-**Verify skills through evidence, not claims.**
+> **Auditable Developer Skill Verification Ledger**  
+> *Deterministic skill extraction from PDF resumes cross-referenced against public GitHub repository artifacts, commit history, and automated anti-gaming trust signals.*
 
-SkillProof is a complete MERN MVP that connects a PDF resume to public GitHub repository evidence, explains technical-skill classifications, and compares that evidence with a job description. Gaps become focused micro-tasks with concrete outputs.
+---
 
-Resume skill lists alone provide little context. SkillProof makes the underlying evidence inspectable without treating public GitHub activity as a measure of a person's overall ability.
+## ⚡ What is SkillProof?
 
-## Features
+Traditional technical hiring relies on self-reported resume skill bullets or opaque AI resume screeners that hallucinate inferences. **SkillProof** replaces both with an **Auditable Verification Ledger**.
 
-- PDF upload, private Cloudinary storage, text extraction, contact/section parsing, and a centralized technical-skill dictionary.
-- Targeted public GitHub analysis: active non-fork repositories, languages, manifests, README, candidate-attributed commits, test indicators, deployment configuration, and workflow files.
-- Auditable Proven / Partial / Claimed-only classifications with score breakdowns, repository/file URLs, and collection caveats.
-- Durable MongoDB-backed asynchronous analysis, actual stage polling, lease-based interrupted-work recovery, and manual retry.
-- Candidate dashboard, responsive skill table, evidence details, repository summaries, job analysis, coverage, gap explanations, and persisted micro-task progress.
-- Private report access keys, local report history, key export/import, and deletion of a candidate report, PDF, and linked jobs.
-- Express validation, Helmet, explicit CORS origins, upload limits, rate limiting, safe errors, and structured operational logs.
+- **Zero LLM Hallucinations**: 100% deterministic ontology matching and graph expansion with decay.
+- **Concrete Artifact Evidence**: Every verified point links to actual GitHub manifests, deep file trees, and commit hashes.
+- **Anti-Gaming Trust Signals**: Penalizes tutorial clones, commit dumping bursts, empty forks, and vendored code (`node_modules` committed directly).
+- **Audit Ledger Design**: Strict high-density tabular typography using *Fraunces* serif headings, *IBM Plex Sans* body, and *IBM Plex Mono* evidence badges with hairline borders.
 
-## Stack and structure
+---
 
-React 19, Vite, Tailwind CSS 4, React Router, Axios, Node.js 22, Express 5, Mongoose, MongoDB Atlas, Multer, pdf-parse, Cloudinary, and GitHub REST API. No test framework, external queue service, LLM provider, or persistent local file storage is required.
+## 🏛️ System Architecture
 
 ```text
-TechForge_hackathon/
-├── frontend/                 React application; independently installable/deployable
-│   ├── src/
-│   │   ├── components/       Common, layout, forms, dashboard, skills, evidence, jobs
-│   │   ├── pages/            Every product route
-│   │   ├── context/          Browser report-key/history state
-│   │   ├── hooks/            Resource loading and analysis polling
-│   │   └── services/         Central API client and report-key storage
-│   ├── docs/
-│   ├── .env.example
-│   └── vercel.json
-├── backend/
-│   ├── src/
-│   │   ├── config/           Validated environment, database, scoring
-│   │   ├── controllers/      Thin HTTP adapters
-│   │   ├── routes/           REST routes and route limits
-│   │   ├── middlewares/      Validation, upload handling, errors
-│   │   ├── models/           Analysis, JobAnalysis, embedded schemas
-│   │   ├── services/         Resume, GitHub, evidence, jobs, storage, worker
-│   │   ├── data/             Skill dictionary and micro-task catalog
-│   │   └── utils/
-│   ├── docs/api/
-│   └── .env.example
-├── docs/                     Product, architecture, business logic, deployment
-├── render.yaml
-└── package.json              Convenience commands for both applications
+                               ┌────────────────────────┐
+                               │  Candidate PDF Resume  │
+                               └───────────┬────────────┘
+                                           │ pdf-parse + section parser
+                                           ▼
+┌──────────────────────┐       ┌────────────────────────┐
+│  Public GitHub API   │       │ Skill Extraction Engine│
+│ (Repos, Commits, AST)│       │ (250+ Ontological SKUs)│
+└──────────┬───────────┘       └───────────┬────────────┘
+           │                               │
+           ▼                               ▼
+┌───────────────────────────────────────────────────────┐
+│              Evidence Collector Engine                │
+│  - Manifest Parsers (package.json, go.mod, Cargo.toml)│
+│  - Code Tree Scan (Imports, extensions, config files) │
+│  - Candidate Commit Attribution & Time-span Analysis  │
+└──────────────────────────┬────────────────────────────┘
+                           │
+                           ▼
+┌───────────────────────────────────────────────────────┐
+│             Anti-Gaming Trust Signal Engine           │
+│  - Fork Detection with commit delta check             │
+│  - Commit burst & single-dump flagger                 │
+│  - README Jaccard boilerplate matcher                 │
+│  - Vendored code detection                            │
+└──────────────────────────┬────────────────────────────┘
+                           │
+                           ▼
+┌───────────────────────────────────────────────────────┐
+│                  Scoring Engine V2                    │
+│    Weights: Manifest (20) + Commit Attribution (20)   │
+│             + Recency (15) + Complexity/Breadth (15)  │
+│             + Time-span (15) + Graph Implication (15) │
+│               Multiplied by Trust Factor [0.0 - 1.0]  │
+└──────────────────────────┬────────────────────────────┘
+                           │
+              ┌────────────┴────────────┐
+              ▼                         ▼
+   ┌──────────────────────┐  ┌──────────────────────┐
+   │ Proven (Score >= 70) │  │ Partial (30 <= S <70)│
+   └──────────────────────┘  └──────────────────────┘
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+   ┌─────────────────────────────────────────────────┐
+   │             Discrepancy Analysis                │
+   │  - POSITIVE: Discovered unlisted strengths      │
+   │  - YEARS_MISMATCH: Experience vs Commit tenure  │
+   │  - NO_ARTIFACT: Claimed skills with zero code   │
+   └─────────────────────────────────────────────────┘
 ```
 
-## Local setup
+---
 
-Use Node.js **22.14 or newer in the Node 22 release line**. Dependencies and lockfiles are separate for root, frontend, and backend. On Windows PowerShell, use `npm.cmd` if `npm.ps1` is restricted.
+## 🔬 Scoring Methodology V2
 
-```powershell
-cd D:\Ramzan_Khan\Hackathons\TechForge_TSEC\TechForge_hackathon
-npm.cmd ci
-npm.cmd ci --prefix backend
-npm.cmd ci --prefix frontend
-if (!(Test-Path backend/.env)) { Copy-Item backend/.env.example backend/.env }
-if (!(Test-Path frontend/.env)) { Copy-Item frontend/.env.example frontend/.env }
-```
+Every skill is evaluated against an objective, auditable rubric out of 100 possible points:
 
-Fill the backend credentials described below, then start both processes:
-
-```powershell
-npm.cmd run dev
-```
-
-Frontend: `http://localhost:5173`. API: `http://localhost:8000/api`. Configure `CLIENT_ORIGIN` and `VITE_API_BASE_URL` if you change ports. No fake-data mode or implicit local database fallback is enabled. The frontend can display its landing page without a running API; analysis needs the configured backend.
-
-Separate terminals are also supported:
-
-```powershell
-npm.cmd run dev --prefix backend
-npm.cmd run dev --prefix frontend
-```
-
-Build the frontend with `npm.cmd run build`. Run the backend in production mode with `npm.cmd start --prefix backend` after setting its environment. Preview a frontend build with `npm.cmd run preview --prefix frontend`; preview is a local utility, not a production web server.
-
-## Environment and service accounts
-
-| Location | Variable | Purpose |
+| Dimension | Max Points | Verification Criteria |
 |---|---|---|
-| Backend | `MONGO_URI` | Atlas connection string, with the `skillproof` database name |
-| Backend | `CLOUDINARY_CLOUD_NAME` | Cloudinary product environment cloud name |
-| Backend | `CLOUDINARY_API_KEY` | Cloudinary server-side key |
-| Backend | `CLOUDINARY_API_SECRET` | Cloudinary server-side secret |
-| Backend | `GITHUB_TOKEN` | Recommended server-side credential for public API access |
-| Backend | `CLIENT_ORIGIN` | Exact allowed frontend origin, or comma-separated origins |
-| Backend | `PORT` | HTTP port; Render supplies it in production |
-| Frontend | `VITE_API_BASE_URL` | Public API base URL **including `/api`** |
+| **Manifest Evidence** | 20 pts | Direct dependency or devDependency declared in build manifest |
+| **Commit Attribution** | 20 pts | Commits authored by the candidate matching email/username |
+| **Recency** | 15 pts | Activity within the last 6 months (scaled decay up to 2 years) |
+| **Breadth / Complexity** | 15 pts | Discovered across multiple distinct repositories or subsystems |
+| **Time-span Depth** | 15 pts | Active commit history spanning > 12 months on repositories |
+| **Graph Implication** | 15 pts | Transitive implication from parent technologies (e.g. Next.js implies React) |
 
-Additional operational variables are documented in [backend environment](backend/docs/environment.md). Never put MongoDB, GitHub, or Cloudinary secrets in a `VITE_` variable.
+**Classification Thresholds:**
+- **PROVEN** (`≥ 70 pts`): Solid multi-repository or multi-file artifact trail with candidate commits.
+- **PARTIAL** (`30 - 69 pts`): Documented presence in dependencies or single commits without extended tenure.
+- **CLAIMED** (`< 30 pts`): Listed on resume with no public repository artifact backing.
 
-### MongoDB Atlas
+---
 
-1. Create an Atlas project and free cluster using your account's available free option.
-2. Create a dedicated database user with `readWrite` on `skillproof`.
-3. Add your development IP to Network Access. For Render, allow its service's outbound IP ranges where possible.
-4. Copy the Drivers connection string, URL-encode password characters, and specify `/skillproof` before `?`.
-5. Set `MONGO_URI` in `backend/.env` locally and the Render service environment in production.
-6. The backend connects before listening and creates Mongoose indexes. Read [database documentation](backend/docs/database.md).
+## 🛡️ Anti-Gaming Trust Signals
 
-### GitHub token
+To protect against resume inflation and repository staging, candidate repositories are processed through automated trust heuristics:
 
-Create a server-side token with the minimum access needed to read public repository metadata and contents. No write permission is used. Do not grant private-repository access for this MVP. Set `GITHUB_TOKEN` only on the backend. Without a token the code works against public endpoints but is more likely to hit GitHub's unauthenticated rate limit. Failed rate-limited analyses can be retried after reset. See [GitHub integration](backend/docs/github-integration.md).
+1. **`FORK_NO_OWN_COMMITS`**: Candidate forked an active open-source project but authored 0 commits. Multiplier penalized.
+2. **`TEMPLATE_OR_TUTORIAL`**: Matches known educational boilerplate names (e.g., `freecodecamp`, `react-tutorial`, `100-days-of-code`) or Create-React-App default README text (Jaccard similarity `> 0.70`).
+3. **`SINGLE_COMMIT_DUMP`**: >90% of repository lines created in a single initial commit with no subsequent iterative history.
+4. **`COMMIT_BURST`**: Artificial bursts (>20 commits created in <24 hours before interview).
+5. **`VENDORED_CODE`**: Committed `node_modules/`, `vendor/`, or `.venv/` inflating language metrics.
 
-### Cloudinary
+---
 
-Create a Cloudinary account/product environment and find the cloud name, API key, and API secret in its dashboard. Set the three backend variables. Resumes are uploaded through signed server-side SDK requests as `raw` assets with `authenticated` delivery and random `.pdf` public IDs. No unsigned upload preset is required. MongoDB holds asset references; no PDF bytes are stored there. See [complete Cloudinary setup](backend/docs/cloudinary.md), including cleanup and delivery restrictions.
+## 🚀 Key Features
 
-## Demo flow
+- **Audit Ledger Interface**: Section B high-density theme featuring Fraunces serifs, hairline borders, and inline SVG textured stamps (`--proven`, `--partial`, `--claimed`).
+- **Interactive Experience Dumbbell Chart**: Visualizes the delta between candidate-claimed years and verifiable commit history timeline.
+- **Skill Detail Slide-Over Drawer**: Click any skill row to view its exact score breakdown, repository links, file paths, and trust audits.
+- **Audit Differential & Re-Analysis Mode**: Re-analyze a profile after code changes to view an itemized side-by-side ledger diff with highlighted delta tags.
+- **Job Description Reconciliation**: Paste any job description to calculate verified match coverage, identify missing technical requirements, and view tailored micro-tasks.
+- **Cryptographic Export & Share Profile**:
+  - Export audit dossier as tamper-evident JSON with cryptographic payload hash.
+  - Generate embeddable Markdown README badges for GitHub profiles (`[![SkillProof Verified]](...)`).
+  - Read-only public share links with capability-based security.
+- **⚡ Instant Verified Demo Dossier**: One-click demo loader (`POST /api/analysis/demo`) instantly hydrates a full senior full-stack audit report for presentations without GitHub rate limit bottlenecks.
 
-1. Open **New analysis**, upload a text-based resume PDF, and enter a GitHub username.
-2. Start analysis. The upload request stores and parses the PDF, then returns a private report key.
-3. Watch actual backend stages and open the completed candidate dashboard.
-4. Review verified skills, then click a skill to inspect its evidence and score breakdown.
-5. Save the report access key if you need another browser or device.
-6. Select **Match to a role**, paste a job description, and analyze it.
-7. Review Skill Coverage, verified and partial matches, and gaps.
-8. Open micro-task outputs and track personal progress.
-9. Publish new work and create a new analysis to collect fresh evidence; marking a task done does not change verification.
+---
 
-## Deployment
+## 💻 Tech Stack
 
-Configuration is provided; creating files does **not** deploy the application.
+- **Frontend**: React 19, Vite, Tailwind CSS 4, Lucide Icons, Vanilla CSS Design System (`index.css`).
+- **Backend**: Node.js 22, Express 5, Mongoose 8, MongoDB Atlas, Multer, `pdf-parse`, Cloudinary SDK.
+- **Test Suite**: Native Node.js Test Runner (`node --test`), 21 passing test suites.
 
-1. Push this repository to GitHub yourself.
-2. Create an Atlas cluster and Cloudinary product environment and obtain their credentials.
-3. In Render, create a Blueprint from root `render.yaml`, or a Node web service with root `backend`, build `npm ci --omit=dev`, start `npm start`, and health check `/api/health`. Set the backend secrets and `TRUST_PROXY=1`.
-4. In Vercel, import the repository with root `frontend`, framework Vite, build `npm run build`, output `dist`, and install `npm ci`. Set `VITE_API_BASE_URL=https://YOUR-RENDER-SERVICE.onrender.com/api`.
-5. Set Render `CLIENT_ORIGIN` to the exact Vercel production origin and redeploy. Use explicit preview origins if needed; do not use wildcard credentials or dynamically trust arbitrary origins.
-6. Vercel SPA rewrites are included in `frontend/vercel.json`. GitHub tokens and database/storage secrets stay on Render.
+---
 
-The free Render process can sleep or restart; the queue is stored in MongoDB, and an expired lease is reclaimed when the process runs again. See [deployment overview](docs/deployment-overview.md) for platform limitations and account setup.
+## 🏃 Quickstart & Installation
 
-## Documentation
+### Prerequisites
+- Node.js `22.x`
+- MongoDB Atlas connection URI or local MongoDB instance
 
-- [System architecture and data flow](docs/architecture.md)
-- [Product overview](docs/product-overview.md)
-- [Scoring, classification, coverage, and task logic](docs/business-logic.md)
-- [Complete REST API reference](backend/docs/api/README.md)
-- [Backend guide](backend/README.md) and [frontend guide](frontend/README.md)
-- [Deployment overview](docs/deployment-overview.md)
-- [Limitations](docs/limitations.md) and [future improvements](docs/future-improvements.md)
+### 1. Clone & Install Dependencies
+```bash
+git clone https://github.com/RamzanKhansLab/TechForge_hackathon.git
+cd TechForge_hackathon
+npm ci
+npm ci --prefix backend
+npm ci --prefix frontend
+```
 
-## Security and scope
+### 2. Configure Environment
+Copy `.env.example` templates:
+```bash
+# Backend configuration
+cp backend/.env.example backend/.env
 
-Reports contain personal information. Each new report gets a random 256-bit access token; only a hash is stored server-side. The browser stores the token locally and supplies `X-Access-Token`. Anyone with a key can access its report. Save key files privately. This is capability-based MVP access, not account authentication or enterprise authorization. CORS is not authentication.
+# Frontend configuration
+cp frontend/.env.example frontend/.env
+```
 
-Uploaded resumes remain until deleted through their candidate overview. There is no retention scheduler, OAuth, private repository analysis, OCR, LLM extraction, code execution, candidate ranking, or hiring prediction in this MVP. Those deliberate boundaries and operational caveats are documented. Cloud integrations require real account configuration before use. No deployment or browser/E2E validation is implied by this codebase.
+Fill in `backend/.env`:
+```env
+PORT=8000
+CLIENT_ORIGIN=http://localhost:5173
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/skillproof?retryWrites=true&w=majority
+GITHUB_TOKEN=ghp_your_optional_token
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_key
+CLOUDINARY_API_SECRET=your_secret
+```
+
+### 3. Run Dev Server
+```bash
+# Run both frontend and backend concurrently
+npm run dev
+```
+- Web Application: `http://localhost:5173`
+- REST API: `http://localhost:8000/api`
+
+### 4. Run Automated Test Suite
+```bash
+cd backend
+npm test
+```
+All 21 comprehensive tests covering ontology normalization, anti-gaming algorithms, scoring monotonicity, and differential calculation will execute synchronously.
+
+---
+
+## 🏆 Hackathon Demo Guide
+
+1. Navigate to `http://localhost:5173/analyze`.
+2. Click **⚡ Load Verified Demo Dossier** for an immediate, production-grade senior full-stack audit ledger.
+3. **Inspect the Dumbbell Chart**: Notice Kubernetes flagged with a `YEARS_MISMATCH` (4 claimed vs 1 verifiable year).
+4. **Slide-Over Skill Drawer**: Click on `React` or `Redis` in the Skills Table to see manifest citations, candidate commits, and positive discovered strengths.
+5. **Role Reconciliation**: Click **Match to a role**, paste target senior backend requirements, and observe the live coverage delta.
+6. **Live Badging & Export**: Click **Share** to copy the GitHub markdown badge or download the cryptographic JSON export file.
