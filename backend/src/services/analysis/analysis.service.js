@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { randomBytes, createHash } from 'node:crypto';
 import { Analysis } from '../../models/Analysis.js';
 import { JobAnalysis } from '../../models/JobAnalysis.js';
 import { newAccess, authorize, publicDocument } from '../../utils/access.js';
@@ -60,6 +61,61 @@ export async function reanalyze(id, token) {
   return { analysisId: nextAnalysis._id, status: nextAnalysis.status, accessToken };
 }
 
+export async function toggleShare(id, isPublic, token) {
+  const analysis = await getAnalysis(id, token);
+  const shareId = isPublic ? (analysis.shareId || randomBytes(8).toString('hex')) : null;
+  const updated = await Analysis.findByIdAndUpdate(
+    id,
+    { $set: { isPublic: Boolean(isPublic), shareId } },
+    { new: true }
+  );
+  return {
+    isPublic: updated.isPublic,
+    shareId: updated.shareId,
+    shareUrl: updated.shareId ? `/share/${updated.shareId}` : null
+  };
+}
+
+export async function getSharedProfile(shareId) {
+  const analysis = await Analysis.findOne({ shareId, isPublic: true, status: 'completed' });
+  if (!analysis) throw new AppError(404, 'NOT_FOUND', 'This shared candidate report is not publicly available.');
+  return publicDocument(analysis);
+}
+
+export async function generateAuditExport(id, token) {
+  const analysis = await getAnalysis(id, token);
+  const payload = {
+    reportId: analysis.reportId || analysis._id,
+    analysisId: analysis._id,
+    scoringVersion: analysis.scoringVersion || '2.0',
+    candidate: {
+      githubUsername: analysis.githubUsername,
+      name: analysis.candidate?.name || analysis.github?.name,
+      analyzedAt: analysis.completedAt || analysis.createdAt
+    },
+    summary: analysis.summary,
+    skills: (analysis.skills || []).map(s => ({
+      id: s.id,
+      name: s.name,
+      status: s.status,
+      score: s.score,
+      breakdown: s.breakdown,
+      signalsCount: s.evidence?.length || 0,
+      evidenceHashes: (s.evidence || []).map(e => e.deterministicId)
+    })),
+    discrepancyReport: analysis.discrepancyReport,
+    auditSignature: createHash('sha256')
+      .update(JSON.stringify({
+        id: String(analysis._id),
+        user: analysis.githubUsername,
+        date: analysis.completedAt,
+        summary: analysis.summary
+      }))
+      .digest('hex')
+  };
+  return payload;
+}
+
 export async function removeAnalysis(id, token) {
   const analysis = await getAnalysis(id, token);
   if (['processing','queued'].includes(analysis.status)) throw new AppError(409, 'ANALYSIS_BUSY', 'Wait for analysis to finish before deleting it.');
@@ -67,4 +123,5 @@ export async function removeAnalysis(id, token) {
   await JobAnalysis.deleteMany({ analysisId: id });
   await Analysis.deleteOne({ _id: id });
 }
+
 

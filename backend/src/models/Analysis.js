@@ -60,9 +60,12 @@ const schema = new Schema({
   },
   previousAnalysisId: { type: Schema.Types.ObjectId, ref: 'Analysis', default: null },
   diff: { type: Schema.Types.Mixed, default: null },
+  isPublic: { type: Boolean, default: false },
+  shareId: { type: String, default: null, index: true },
   status: { type: String, enum: ['queued', 'processing', 'completed', 'failed'], default: 'queued', required: true },
   stage: { type: String, default: 'queued' }, progress: { type: Number, default: 0 },
   error: { code: String, message: String }, scoringVersion: String,
+
   attempts: { type: Number, default: 0 }, leaseOwner: String, leaseUntil: Date,
   completedAt: Date,
 }, { timestamps: true });

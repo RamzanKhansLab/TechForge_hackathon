@@ -19,5 +19,18 @@ export async function diff(req,res) {
   const analysis = await service.getAnalysis(req.params.id, token(req));
   res.json({ success: true, data: analysis.diff || null });
 }
+export async function share(req,res) {
+  const result = await service.toggleShare(req.params.id, req.body.isPublic, token(req));
+  res.json({ success: true, data: result });
+}
+export async function getShared(req,res) {
+  const profile = await service.getSharedProfile(req.params.shareId);
+  res.json({ success: true, data: profile });
+}
+export async function auditExport(req,res) {
+  const exportData = await service.generateAuditExport(req.params.id, token(req));
+  res.json({ success: true, data: exportData });
+}
 export async function remove(req,res) { await service.removeAnalysis(req.params.id,token(req)); res.json({ success: true, data: { deleted: true } }); }
+
 

@@ -10,6 +10,10 @@ export const analysisApi = {
   retry: id => client.post(`/analysis/${id}/retry`,{},config(id)),
   reanalyze: id => client.post(`/analysis/${id}/reanalyze`,{},config(id)),
   diff: (id,signal) => client.get(`/analysis/${id}/diff`,{ ...config(id), signal }),
+  share: (id, isPublic) => client.post(`/analysis/${id}/share`, { isPublic }, config(id)),
+  getShared: (shareId, signal) => client.get(`/share/${shareId}`, { signal }),
+  exportData: (id, signal) => client.get(`/analysis/${id}/export`, { ...config(id), signal }),
   remove: id => client.delete(`/analysis/${id}`,config(id)),
 };
+
 

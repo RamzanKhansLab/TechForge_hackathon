@@ -26,7 +26,12 @@ router.get('/analysis/:id/repositories', analysis.repositories);
 router.post('/analysis/:id/retry', analysisLimit, analysis.retry);
 router.post('/analysis/:id/reanalyze', analysisLimit, analysis.reanalyze);
 router.get('/analysis/:id/diff', analysis.diff);
+router.post('/analysis/:id/share', analysis.share);
+router.get('/analysis/:id/export', analysis.auditExport);
 router.delete('/analysis/:id', analysis.remove);
+
+router.get('/share/:shareId', analysis.getShared);
+
 
 router.post('/jobs/analyze', jobLimit, jobs.create);
 router.use('/jobs/:id', validateId);
