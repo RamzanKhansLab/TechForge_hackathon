@@ -11,7 +11,7 @@ const schema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string().min(1),
   CLOUDINARY_API_KEY: z.string().min(1),
   CLOUDINARY_API_SECRET: z.string().min(1),
-  MAX_REPOSITORIES: z.coerce.number().int().min(1).max(12).default(6),
+  MAX_REPOSITORIES: z.coerce.number().int().min(1).max(30).default(6),
   MAX_FILE_SIZE_MB: z.coerce.number().int().min(1).max(10).default(5),
   GITHUB_CACHE_TTL_SECONDS: z.coerce.number().int().min(0).max(3600).default(900),
   TRUST_PROXY: z.coerce.number().int().min(0).max(2).default(0),
