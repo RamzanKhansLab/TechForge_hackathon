@@ -162,7 +162,16 @@ GITHUB_TOKEN=ghp_your_optional_token
 CLOUDINARY_CLOUD_NAME=your_cloudinary_name
 CLOUDINARY_API_KEY=your_key
 CLOUDINARY_API_SECRET=your_secret
+JWT_SECRET=replace-with-a-random-32-character-minimum-secret
+REFRESH_SECRET=replace-with-a-different-random-32-character-minimum-secret
+COOKIE_SECRET=replace-with-a-random-32-character-minimum-secret
+COOKIE_SECURE=false
 ```
+
+For Vercel, replace `YOUR-RENDER-SERVICE` in `frontend/vercel.json` with the deployed
+Render service name. The `/api/(.*)` rewrite keeps production cookies first-party. Set
+`COOKIE_SECURE=true` in production; startup rejects insecure cookies or default/short JWT
+and refresh secrets.
 
 ### 3. Run Dev Server
 ```bash

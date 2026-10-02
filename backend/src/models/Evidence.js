@@ -1,6 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 
 const schema = new Schema({
+  ownerUserId: { type: Schema.Types.ObjectId, ref: 'User', default: null, index: true },
+  legacy: { type: Boolean, default: false, index: true },
   analysisId: { type: Schema.Types.ObjectId, ref: 'Analysis', required: true, index: true },
   deterministicId: { type: String, required: true, index: true },
   repo: { type: String, required: true },

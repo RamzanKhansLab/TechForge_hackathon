@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import { z } from 'zod';
 
+const DEFAULT_JWT_SECRET = 'skillproof_super_secret_jwt_key_2026_deterministic_mvp';
+const DEFAULT_REFRESH_SECRET = 'skillproof_refresh_secret_key_2026_deterministic_mvp';
+
 const schema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.coerce.number().int().min(1).max(65535).default(8000),
@@ -15,10 +18,21 @@ const schema = z.object({
   MAX_FILE_SIZE_MB: z.coerce.number().int().min(1).max(10).default(5),
   GITHUB_CACHE_TTL_SECONDS: z.coerce.number().int().min(0).max(3600).default(900),
   TRUST_PROXY: z.coerce.number().int().min(0).max(2).default(0),
+  JWT_SECRET: z.string().min(16).default(DEFAULT_JWT_SECRET),
+  REFRESH_SECRET: z.string().min(16).default(DEFAULT_REFRESH_SECRET),
+  COOKIE_SECRET: z.string().min(16).default('skillproof_cookie_secret_key_2026'),
+  COOKIE_SECURE: z.enum(['true', 'false']).default('false').transform(value => value === 'true'),
 });
 const parsed = schema.safeParse(process.env);
 if (!parsed.success) {
   throw new Error(`Invalid environment variables: ${parsed.error.issues.map(i => i.path.join('.')).join(', ')}. See backend/.env.example.`);
+}
+if (parsed.data.NODE_ENV === 'production') {
+  const invalidProductionSecret = [parsed.data.JWT_SECRET, parsed.data.REFRESH_SECRET]
+    .some(secret => secret.length < 32 || secret === DEFAULT_JWT_SECRET || secret === DEFAULT_REFRESH_SECRET);
+  if (invalidProductionSecret || !parsed.data.COOKIE_SECURE) {
+    throw new Error('Production requires non-default JWT_SECRET and REFRESH_SECRET values of at least 32 characters and COOKIE_SECURE=true.');
+  }
 }
 export const env = Object.freeze(parsed.data);
 export const clientOrigins = env.CLIENT_ORIGIN.split(',').map(origin => {
