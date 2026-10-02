@@ -20,6 +20,7 @@ export async function updateTask(id, skill, status, token) {
   const job = await getJob(id, token);
   const task = job.microTasks.find(item => item.skill === skill);
   if (!task) throw new AppError(404, 'TASK_NOT_FOUND', 'This micro-task was not found.');
-  task.status = status;
-  await job.save(); return publicDocument(job);
+  const updated = await JobAnalysis.findOneAndUpdate({ _id: id, 'microTasks.skill': skill }, { $set: { 'microTasks.$.status': status } }, { new: true });
+  if (!updated) throw new AppError(404, 'TASK_NOT_FOUND', 'This micro-task was removed.');
+  return publicDocument(updated);
 }

@@ -1,0 +1,5 @@
+.candidate-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 25px; background: #254332; border: 1px solid #254332; border-radius: 16px; padding: 26px; }
+.metric-icon { display: flex; align-items: center; justify-content: center; height: 31px; width: 31px; border-radius: 9px; }
+.metric-neutral { background: #f2f4ef; color: #8a9584; }
+.metric-proven { background: #edf5e4; color: #719953; }
+.metric-partial { background: #fcf4e1; color: #c5a047; }

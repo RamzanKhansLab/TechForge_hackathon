@@ -13,7 +13,7 @@ export function authorize(document, token) {
   return document;
 }
 export function publicDocument(document) {
-  const result = document.toObject ? document.toObject() : { ...document };
+  const result = document.toObject ? document.toObject({ flattenMaps: true }) : { ...document };
   for (const key of ['accessTokenHash', 'leaseOwner', 'leaseUntil', '__v']) delete result[key];
   if (result.resume?.asset) {
     result.resume = { ...result.resume, asset: { format: result.resume.asset.format, bytes: result.resume.asset.bytes } };

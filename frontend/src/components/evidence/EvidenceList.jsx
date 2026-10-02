@@ -1,0 +1,9 @@
+import { FileCode2, GitCommitHorizontal, BookOpen, FlaskConical, Rocket, Braces } from 'lucide-react';
+import { ExternalLink, EmptyState } from '../common/UI.jsx';
+import { formatDate } from '../../utils/format.js';
+import './EvidenceList.css';
+const icons = {dependency:FileCode2,configuration:FileCode2,language:Braces,source:FileCode2,readme:BookOpen,commitActivity:GitCommitHorizontal,recentActivity:GitCommitHorizontal,testing:FlaskConical,deployment:Rocket};
+export default function EvidenceList({evidence}) {
+  if (!evidence.length) return <EmptyState title="No supporting public evidence found" description="This may reflect private work, uninspected repositories, or extraction limitations. It does not mean the candidate lacks this skill."/>;
+  return <div className="panel overflow-hidden">{evidence.map((item,index) => {const Icon=icons[item.type] || FileCode2;return <article key={`${item.repository}-${item.type}-${item.file}-${index}`} className="evidence-item"><span className={`mt-0.5 h-fit rounded-lg p-2.5 ${item.strength === 'direct' ? 'bg-[#edf3e5] text-[#5f8444]' : 'bg-paper text-muted'}`}><Icon size={18}/></span><div className="min-w-0 flex-1"><div className="mb-2 flex flex-wrap items-center gap-2"><span className="text-[10px] font-semibold uppercase tracking-wide text-muted">{item.type.replace(/([A-Z])/g,' $1')}</span><span className="rounded border border-line px-1.5 py-0.5 text-[9px] text-muted">{item.strength === 'direct' ? 'Direct signal' : 'Supporting context'}</span></div><p className="text-sm leading-6">{item.description}</p><div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-muted"><ExternalLink href={item.url} className="break-all font-medium text-[#567a3f]">{item.repository}{item.file ? ` / ${item.file}` : ''}</ExternalLink><span>Repository activity: {formatDate(item.date)}</span></div></div></article>;})}</div>;
+}
