@@ -25,6 +25,7 @@ const repositorySchema = new Schema({
 const schema = new Schema({
   ownerUserId: { type: Schema.Types.ObjectId, ref: 'User', default: null, index: true },
   legacy: { type: Boolean, default: false, index: true },
+  isDemo: { type: Boolean, default: false, index: true },
   reportId: { type: Schema.Types.ObjectId, ref: 'Analysis', default: function() { return this._id; }, index: true },
   accessTokenHash: { type: String, required: true, select: false },
   githubUsername: { type: String, required: true, maxlength: 39 },

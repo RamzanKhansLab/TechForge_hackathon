@@ -196,9 +196,29 @@ describe('Phase A1 authentication', { concurrency: false, timeout: 60000 }, () =
     assert.equal(Analysis.schema.path('ownerUserId').options.default, null);
     assert.equal(Analysis.schema.path('legacy').options.default, false);
 
-    const response = await request(app).post('/api/public/compare').send({
-      jdText: 'A valid job description that is long enough for validation.', tokens: ['one', 'two', 'three', 'four', 'five']
-    }).expect(400);
+    // Unauthenticated request must be rejected before validation runs
+    const unauthed = await request(app).post('/api/public/compare')
+      .set('Origin', origin)
+      .send({ jdText: 'A valid job description that is long enough for validation.', tokens: ['one', 'two', 'three', 'four', 'five'] })
+      .expect(401);
+    assert.equal(unauthed.body.error.code, 'UNAUTHORIZED');
+
+    // Authenticated recruiter: 5 tokens → validation fires and returns 400
+    // Create directly to avoid the register rate limiter (5/hr) exhausted by prior tests
+    const { hashPassword: hp } = await import('../src/utils/auth.js');
+    const { User: UserModel } = await import('../src/models/User.js');
+    await UserModel.create({ email: 'recruiter@example.test', passwordHash: await hp('CorrectHorseBatteryStaple99!'), displayName: 'Test Recruiter', role: 'recruiter', orgName: 'AcmeCorp' });
+    const recruiterAgent = request.agent(app);
+    const loginToken = await csrf(recruiterAgent);
+    const recruiterLogin = await recruiterAgent.post('/api/auth/login')
+      .set(csrfHeaders(loginToken))
+      .send({ email: 'recruiter@example.test', password: 'CorrectHorseBatteryStaple99!' })
+      .expect(200);
+    const recruiterCsrf = recruiterLogin.body.data.csrfToken;
+    const response = await recruiterAgent.post('/api/public/compare')
+      .set({ Origin: origin, 'X-SP-CSRF': recruiterCsrf })
+      .send({ jdText: 'A valid job description that is long enough for validation.', tokens: ['one', 'two', 'three', 'four', 'five'] })
+      .expect(400);
     assert.equal(response.body.error.code, 'INVALID_TOKENS');
   });
 

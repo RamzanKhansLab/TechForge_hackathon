@@ -7,16 +7,19 @@ import React from 'react';
  * Small size: no rotation (tables/inline).
  * Large size: rotated -2deg (drawers/overview).
  */
-export function Stamp({ verdict = 'Proven', size = 'sm', className = '' }) {
-  const normVerdict = verdict === 'Proven' ? 'PROVEN' : verdict === 'Partial' ? 'PARTIAL' : 'CLAIMED-ONLY';
+export function Stamp({ verdict, status, size = 'sm', className = '' }) {
+  const rawVerdict = verdict || status || 'Proven';
+  const vUpper = String(rawVerdict).toUpperCase().replace(/_/g, '-');
+  
+  const isProven = vUpper === 'PROVEN';
+  const isPartial = vUpper === 'PARTIAL';
 
-  const isProven = verdict === 'Proven';
-  const isPartial = verdict === 'Partial';
+  const normVerdict = isProven ? 'PROVEN' : isPartial ? 'PARTIAL' : 'CLAIMED-ONLY';
 
   const color = isProven ? 'var(--color-proven)' : isPartial ? 'var(--color-partial)' : 'var(--color-claimed)';
   const bgColor = isProven ? 'var(--color-proven-bg)' : isPartial ? 'var(--color-partial-bg)' : 'var(--color-claimed-bg)';
 
-  const filterId = `stamp-texture-${verdict.toLowerCase()}`;
+  const filterId = `stamp-texture-${normVerdict.toLowerCase()}`;
 
   if (size === 'sm') {
     return (

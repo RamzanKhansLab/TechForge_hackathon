@@ -292,6 +292,7 @@ export const SAMPLE_CANDIDATE_DATA = {
   progress: 100,
   scoringVersion: '2.0',
   isPublic: true,
+  isDemo: true,
   shareId: 'demo-sample-audit',
   completedAt: new Date()
 };
@@ -310,7 +311,7 @@ export async function seedDemoReport() {
     // Ensure the existing demo report has the known demo token hash and public settings
     await Analysis.updateOne(
       { _id: existing._id },
-      { $set: { accessTokenHash: DEMO_ACCESS_TOKEN_HASH, isPublic: true, shareId: existing.shareId || 'demo-sample-audit' } }
+      { $set: { accessTokenHash: DEMO_ACCESS_TOKEN_HASH, isPublic: true, isDemo: true, shareId: existing.shareId || 'demo-sample-audit' } }
     );
     return {
       analysisId: existing._id,

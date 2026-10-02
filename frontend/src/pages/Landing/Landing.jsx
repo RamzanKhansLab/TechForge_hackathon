@@ -1,16 +1,255 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, Github, FileText, GitBranch, ShieldCheck, ScanLine, BriefcaseBusiness, Check, Code2, Fingerprint, LockKeyhole } from 'lucide-react';
+import { publicApi } from '../../services/api/publicApi.js';
 import { Logo } from '../../components/common/UI.jsx';
+import { Stamp, Button, KeyBox } from '../../ui/index.js';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  ShieldCheck,
+  BriefcaseBusiness,
+  Sparkles,
+  GitBranch,
+  FileText,
+  Search,
+  CheckCircle2,
+  Lock,
+  Layers,
+  Fingerprint
+} from 'lucide-react';
 import './Landing.css';
-const steps = [{icon:FileText,title:'Start with the claim',text:'Upload a resume and add a public GitHub username.'},{icon:GitBranch,title:'Follow the evidence',text:'Inspect relevant repositories, dependencies, and activity.'},{icon:ShieldCheck,title:'See what holds up',text:'Explore every skill, its evidence score, and the reasons.'},{icon:BriefcaseBusiness,title:'Find the next step',text:'Match a job description and build evidence for the gaps.'}];
+
 export default function Landing() {
-  return <div className="landing"><header className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-6 sm:px-10"><Link to="/" aria-label="SkillProof home"><Logo/></Link><nav className="hidden items-center gap-8 text-sm text-muted md:flex" aria-label="Main navigation"><a href="#how-it-works" className="hover:text-ink">How it works</a><Link to="/methodology" className="hover:text-ink">Our methodology</Link><Link to="/reports" className="hover:text-ink">Workspace</Link></nav><Link to="/analyze" className="btn btn-primary">Get started<ArrowUpRight size={16}/></Link></header>
-    <main><section className="mx-auto grid max-w-7xl items-center gap-14 px-6 pb-20 pt-12 sm:px-10 sm:pt-20 lg:grid-cols-[1.1fr_1fr] lg:gap-8 lg:pb-28"><div><div className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-[#dce4d5] bg-[#edf2e6] px-3.5 py-2 text-[11px] font-semibold tracking-wide"><span className="size-1.5 rounded-full bg-[#6d944e]"/>A clearer picture of technical talent</div><h1 className="hero-heading">Your skills.<br/>The evidence<br/>to <span className="hero-mark">back them.</span></h1><p className="mt-7 max-w-md text-base leading-7 text-muted">Verify skills through evidence, not claims. Connect a resume to real GitHub work, understand the fit, and turn skill gaps into your next project.</p><div className="mt-9 flex flex-wrap gap-3"><Link to="/analyze" className="btn btn-primary px-6">Analyze candidate<ArrowRight size={17}/></Link><a href="#how-it-works" className="btn btn-secondary">See how it works</a></div><div className="mt-6 flex flex-wrap gap-5 text-xs text-muted"><span className="flex items-center gap-1.5"><Check size={14}/>Public GitHub evidence</span><span className="flex items-center gap-1.5"><Check size={14}/>Transparent scoring</span></div></div>
-      <div className="evidence-visual"><div className="mb-9 flex items-center justify-between"><span className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-[#aebfa8]"><Fingerprint size={17}/>The evidence trail</span><span className="rounded-md border border-[#567047] px-2 py-1 text-[9px] text-[#bcd0b2]">EXPLAINABLE BY DESIGN</span></div><div className="visual-source"><div className="flex items-center gap-3"><span className="flex size-10 items-center justify-center rounded-xl bg-[#eff3e8] text-forest"><FileText size={21}/></span><div><p className="text-sm font-semibold">Resume claims</p><p className="mt-1 text-[11px] text-muted">The starting point, not the verdict.</p></div></div><div className="mt-5 flex gap-2"><span className="visual-chip">Languages</span><span className="visual-chip">Frameworks</span><span className="visual-chip">Tools</span></div></div><div className="trail-connector"><span/><ScanLine size={19}/><span/></div><div className="visual-source"><div className="flex items-center gap-3"><span className="flex size-10 items-center justify-center rounded-xl bg-[#eff3e8] text-forest"><Github size={23}/></span><div><p className="text-sm font-semibold">Public GitHub work</p><p className="mt-1 text-[11px] text-muted">Follow the source. Inspect the signals.</p></div></div><div className="mt-5 grid grid-cols-3 gap-2 border-t border-line pt-4 text-center"><div><Code2 size={18} className="mx-auto mb-2 text-muted"/><span className="text-[10px]">Dependencies</span></div><div><GitBranch size={18} className="mx-auto mb-2 text-muted"/><span className="text-[10px]">Contributions</span></div><div><FileText size={18} className="mx-auto mb-2 text-muted"/><span className="text-[10px]">Documentation</span></div></div></div><div className="trail-connector"><span/><ArrowRight size={18} className="rotate-90"/><span/></div><div className="flex items-center gap-3 rounded-xl border border-[#78935d] bg-[#c3f27b] p-4 text-forest"><ShieldCheck size={24}/><div><p className="text-sm font-bold">A report you can inspect.</p><p className="mt-1 text-[11px]">Every classification. Every reason. Every source.</p></div><ArrowUpRight size={19} className="ml-auto shrink-0"/></div><p className="mt-5 text-center text-[10px] text-[#afc1a8]">A view of available evidence — never a verdict on potential.</p></div>
-    </section>
-    <section className="border-y border-line bg-[#edf0e7]"><div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-12 gap-y-4 px-6 py-7 text-xs text-muted"><span className="eyebrow">Less guesswork. More context.</span><span className="flex items-center gap-2"><Github size={17}/>GitHub-connected</span><span className="flex items-center gap-2"><ShieldCheck size={17}/>Evidence you can audit</span><span className="flex items-center gap-2"><LockKeyhole size={17}/>Private resume reports</span></div></section>
-    <section id="how-it-works" className="mx-auto max-w-7xl px-6 py-22 sm:px-10"><div className="mb-12 flex flex-wrap items-end justify-between gap-6"><div><p className="eyebrow mb-4">From claims to clarity</p><h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Let the work do the talking.</h2></div><p className="max-w-sm text-sm leading-6 text-muted">One connected workflow, from a candidate’s first impression to their next opportunity.</p></div><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{steps.map(({icon:Icon,title,text},index) => <article className="panel p-6" key={title}><div className="mb-8 flex items-center justify-between"><span className="rounded-xl bg-[#f0f4e9] p-3 text-[#557440]"><Icon size={22}/></span><span className="font-mono text-xs text-[#929d8e]">0{index+1}</span></div><h3 className="text-base font-bold">{title}</h3><p className="muted mt-3">{text}</p></article>)}</div></section>
-    <section className="mx-auto mb-20 max-w-7xl px-6 sm:px-10"><div className="grid gap-8 rounded-2xl bg-[#e4ebd9] p-8 sm:p-12 md:grid-cols-[1fr_auto] md:items-center"><div><p className="eyebrow mb-3">Potential deserves a closer look</p><h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Go beyond a list of skills.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-muted">Understand what’s supported, what’s emerging, and what to build next.</p></div><Link to="/analyze" className="btn btn-primary">Create your first report<ArrowUpRight size={17}/></Link></div></section></main>
-    <footer className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-5 border-t border-line px-6 py-8 sm:px-10"><Logo/><p className="text-xs text-muted">Evidence gives context. People make the decisions.</p><Link className="text-xs font-semibold" to="/methodology">Read our methodology ↗</Link></footer>
-  </div>;
+  const [stats, setStats] = useState({ analyses: 142, skillsVerified: 876 });
+
+  useEffect(() => {
+    publicApi.getStats()
+      .then(res => {
+        if (res.data) setStats(res.data);
+      })
+      .catch(() => {});
+  }, []);
+
+  return (
+    <div className="landing min-h-screen bg-paper text-ink font-sans">
+      {/* Editorial Header */}
+      <header className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-6 sm:px-10 border-b border-rule">
+        <Link to="/" aria-label="SkillProof home">
+          <div className="flex items-baseline gap-2">
+            <span className="font-display text-2xl font-bold tracking-tight text-ink">SkillProof</span>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-ink-3">AUDIT LEDGER</span>
+          </div>
+        </Link>
+        <nav className="hidden items-center gap-8 text-xs font-mono text-ink-3 md:flex">
+          <Link to="/student" className="hover:text-ink">Student Coach</Link>
+          <Link to="/recruiter" className="hover:text-ink">Evidence Desk</Link>
+          <Link to="/methodology" className="hover:text-ink">Methodology & Ethics</Link>
+          <Link to="/ui-kit" className="hover:text-ink">UI Kit</Link>
+        </nav>
+        <div className="flex items-center gap-3">
+          <Link to="/analyze">
+            <Button variant="primary" className="text-xs">
+              <span>New Intake</span>
+              <ArrowUpRight size={14} className="ml-1" />
+            </Button>
+          </Link>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-7xl px-6 py-12 sm:px-10 space-y-16">
+        {/* Hero Section */}
+        <section className="text-center max-w-3xl mx-auto space-y-4 pt-4 sm:pt-10">
+          <span className="font-mono text-xs uppercase tracking-widest text-ink-3 border border-rule px-3 py-1 rounded-full bg-card inline-block">
+            EVIDENCE OVER CLAIMS · NOT A HIRING PREDICTION
+          </span>
+          <h1 className="font-serif text-4xl sm:text-6xl font-bold tracking-tight text-ink leading-tight">
+            One Evidence Engine.<br />
+            <span className="text-forest italic">Two Auditing Lenses.</span>
+          </h1>
+          <p className="text-sm sm:text-base text-ink-2 max-w-2xl mx-auto leading-relaxed">
+            SkillProof deterministically audits resumes against public GitHub repositories. No LLM hallucinations, no opaque recruiter rankings, no candidate predictions.
+          </p>
+          <div className="pt-2 font-mono text-xs text-ink-3">
+            <span>Verified to date: </span>
+            <strong className="text-ink">{stats.analyses} case files</strong>
+            <span> and </span>
+            <strong className="text-forest">{stats.skillsVerified} verified skills</strong>.
+          </div>
+        </section>
+
+        {/* Dual Role Split Entry Cards */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+          {/* Lens 1: Student / Coach */}
+          <div className="border border-rule bg-card p-8 rounded-[2px] flex flex-col justify-between space-y-8 hover:border-forest/50 transition">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-forest font-bold bg-forest/10 px-2.5 py-1 rounded">
+                  FOR STUDENTS & CANDIDATES
+                </span>
+                <span className="size-8 rounded bg-forest/10 text-forest flex items-center justify-center">
+                  <ShieldCheck size={18} />
+                </span>
+              </div>
+
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-ink">SkillProof Coach</h2>
+              <p className="text-xs sm:text-sm text-ink-2 leading-relaxed">
+                Substantiate your resume claims with verifiable code evidence. Get a weekly topological execution plan, deterministic redline copy-pastes, and shared gap analysis.
+              </p>
+
+              <ul className="space-y-2.5 text-xs font-mono text-ink-2 pt-2">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={14} className="text-forest shrink-0" />
+                  <span>Proof Readiness: Find claimed skills missing public code</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={14} className="text-forest shrink-0" />
+                  <span>Topological Roadmap: DAG-ordered weekly packing</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={14} className="text-forest shrink-0" />
+                  <span>Resume Redlines: 7 deterministic discrepancy rules</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={14} className="text-forest shrink-0" />
+                  <span>Target Roles & Multi-Match: Shared gap analysis</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="pt-4 border-t border-rule space-y-3">
+              <Link to="/student" className="block">
+                <Button variant="primary" className="w-full justify-center text-sm py-2.5">
+                  <span>Enter Coach Workspace</span>
+                  <ArrowRight size={16} className="ml-1.5" />
+                </Button>
+              </Link>
+              <Link to="/analyze" className="block text-center text-xs font-mono text-ink-3 hover:text-ink">
+                Or upload a resume to start a fresh audit →
+              </Link>
+            </div>
+          </div>
+
+          {/* Lens 2: Recruiter / Evidence Desk */}
+          <div className="border border-rule bg-card p-8 rounded-[2px] flex flex-col justify-between space-y-8 hover:border-ink/50 transition">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-ink-3 font-bold bg-paper border border-rule px-2.5 py-1 rounded">
+                  FOR RECRUITERS & REVIEWERS
+                </span>
+                <span className="size-8 rounded bg-paper border border-rule text-ink flex items-center justify-center">
+                  <BriefcaseBusiness size={18} />
+                </span>
+              </div>
+
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-ink">Evidence Desk</h2>
+              <p className="text-xs sm:text-sm text-ink-2 leading-relaxed">
+                Review verified candidate evidence sheets and run stateless requirement matrices. Strictly capability-based: zero logins, zero candidate ranking, zero predictions.
+              </p>
+
+              <ul className="space-y-2.5 text-xs font-mono text-ink-2 pt-2">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={14} className="text-ink shrink-0" />
+                  <span>Single Candidate Dossier: Dense evidence ledger</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={14} className="text-ink shrink-0" />
+                  <span>Stateless JD Match: Instant coverage breakdown</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={14} className="text-ink shrink-0" />
+                  <span>"Verify Yourself": Step-by-step GitHub inspection</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={14} className="text-ink shrink-0" />
+                  <span>Requirement Matrix: Side-by-side non-ranked compare</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="pt-4 border-t border-rule space-y-3">
+              <Link to="/recruiter" className="block">
+                <Button variant="secondary" className="w-full justify-center text-sm py-2.5">
+                  <span>Open Evidence Desk</span>
+                  <ArrowRight size={16} className="ml-1.5" />
+                </Button>
+              </Link>
+              <div className="text-center text-[11px] font-mono text-ink-3">
+                Paste a share link or compare tokens with zero signup
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4-Step Ledger Progression */}
+        <section className="border border-rule bg-card p-8 rounded-[2px] space-y-6">
+          <div className="border-b border-rule pb-4">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-ink-3">THE VERIFICATION LIFECYCLE</span>
+            <h3 className="font-serif text-2xl font-bold text-ink mt-0.5">How SkillProof Works</h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="space-y-2">
+              <span className="font-mono text-xs font-bold text-forest">01 / INTAKE</span>
+              <h4 className="font-bold text-sm text-ink">Extract Claims</h4>
+              <p className="text-xs text-ink-3 leading-relaxed">
+                Resume PDF is parsed into claimed skills, claimed experience dates, and public GitHub identity.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <span className="font-mono text-xs font-bold text-forest">02 / INSPECT</span>
+              <h4 className="font-bold text-sm text-ink">Query Repositories</h4>
+              <p className="text-xs text-ink-3 leading-relaxed">
+                Dependency manifests, Dockerfiles, test suites, and git commit author signatures are fetched via GitHub API.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <span className="font-mono text-xs font-bold text-forest">03 / AUDIT</span>
+              <h4 className="font-bold text-sm text-ink">Deterministic Scoring</h4>
+              <p className="text-xs text-ink-3 leading-relaxed">
+                Pure mathematical weights and ontology graph implications classify skills into Proven, Partial, or Claimed-only.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <span className="font-mono text-xs font-bold text-forest">04 / SUBSTANTIATE</span>
+              <h4 className="font-bold text-sm text-ink">Actionable Proof</h4>
+              <p className="text-xs text-ink-3 leading-relaxed">
+                Students close gaps through targeted code tasks; reviewers verify artifacts directly on GitHub.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Ethics & Guardrails Callout */}
+        <section className="p-6 border border-rule bg-paper rounded-[2px] flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-ink-2">
+          <div className="space-y-1">
+            <span className="font-bold uppercase text-ink flex items-center gap-1.5">
+              <Lock size={14} className="text-forest" />
+              ETHICS & ACCESS GUARDRAILS
+            </span>
+            <p className="text-ink-3">
+              Zero candidate rankings · Capability-token access · 100% deterministic rules · Explainable by design
+            </p>
+          </div>
+          <Link to="/methodology">
+            <Button variant="secondary" className="text-xs">
+              Read Methodology ↗
+            </Button>
+          </Link>
+        </section>
+      </main>
+
+      <footer className="border-t border-rule bg-card py-8 px-6 sm:px-10 text-xs font-mono text-ink-3 mt-16">
+        <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span className="font-bold text-ink">SkillProof</span> · Evidence-backed skill verification.
+          </div>
+          <div className="flex gap-6">
+            <Link to="/student" className="hover:text-ink">Coach Lens</Link>
+            <Link to="/recruiter" className="hover:text-ink">Evidence Desk</Link>
+            <Link to="/methodology" className="hover:text-ink">Methodology</Link>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 }

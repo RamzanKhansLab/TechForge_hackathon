@@ -1,0 +1,422 @@
+/* ═══════════════════════════════════════════════
+   RecruiterShell — dense, cool steel / Case Desk
+   Completely distinct from StudentShell.
+   WCAG AA · 2px #1F4E8C focus rings · reduced-motion
+   ═══════════════════════════════════════════════ */
+
+/* Design tokens — cool steel palette */
+:root {
+  --rec-bg:        #0D1117;  /* near-black charcoal */
+  --rec-sidebar:   #10171F;  /* sidebar surface */
+  --rec-border:    #1E2D3D;  /* steel rule */
+  --rec-text:      #C5D5F0;  /* cool light blue-white */
+  --rec-muted:     #5A7490;  /* muted steel */
+  --rec-accent:    #4A8FD4;  /* active/link blue */
+  --rec-accent-bg: #132339;  /* active bg */
+  --rec-head:      #0B0F14;  /* topbar / footer */
+}
+
+/* ── Skip link ──────────────────────────────── */
+.rec-skip-link {
+  position: fixed;
+  top: -100px;
+  left: 20px;
+  z-index: 300;
+  padding: 10px 16px;
+  background: var(--rec-accent);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  border-radius: 2px;
+  transition: top 0.15s;
+}
+.rec-skip-link:focus { top: 12px; }
+
+/* ── Shell root ─────────────────────────────── */
+.rec-shell {
+  min-height: 100svh;
+  display: flex;
+  background: var(--rec-bg);
+  color: var(--rec-text);
+  font-family: var(--font-sans);
+}
+
+/* ── Sidebar ────────────────────────────────── */
+.rec-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 60;
+  width: 224px;
+  display: flex;
+  flex-direction: column;
+  background: var(--rec-sidebar);
+  border-right: 1px solid var(--rec-border);
+  overflow-y: auto;
+  padding: 0;
+}
+
+.rec-sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--rec-border);
+}
+
+.rec-wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  text-decoration: none;
+}
+.rec-wordmark-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--rec-text);
+  letter-spacing: -0.01em;
+}
+.rec-wordmark-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  color: var(--rec-accent);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.rec-sidebar-close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--rec-border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--rec-muted);
+  cursor: pointer;
+}
+.rec-sidebar-close:focus-visible { outline: 2px solid #1F4E8C; outline-offset: 2px; }
+
+.rec-sidebar-rule {
+  height: 1px;
+  background: var(--rec-border);
+  margin: 0;
+}
+
+/* ── Sidebar nav ────────────────────────────── */
+.rec-nav {
+  flex: 1;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rec-nav-section {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--rec-muted);
+  padding: 6px 8px 4px;
+  text-transform: uppercase;
+}
+
+.rec-navlink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--rec-muted);
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+  letter-spacing: 0.01em;
+}
+.rec-navlink:hover { background: var(--rec-border); color: var(--rec-text); }
+.rec-navlink:focus-visible { outline: 2px solid #1F4E8C; outline-offset: 2px; }
+
+.rec-navlink-active {
+  background: var(--rec-accent-bg) !important;
+  color: var(--rec-accent) !important;
+  font-weight: 600;
+}
+.rec-navlink-icon { flex-shrink: 0; }
+
+/* ── Sidebar account foot ───────────────────── */
+.rec-sidebar-foot {
+  padding: 12px 14px;
+  border-top: 1px solid var(--rec-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rec-account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.rec-account-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: var(--rec-accent-bg);
+  color: var(--rec-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+  border: 1px solid var(--rec-border);
+}
+
+.rec-account-info { min-width: 0; }
+.rec-account-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--rec-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rec-account-org {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--rec-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+.rec-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border: 1px solid var(--rec-border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--rec-muted);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.rec-logout-btn:hover { background: var(--rec-border); color: var(--rec-text); }
+.rec-logout-btn:focus-visible { outline: 2px solid #1F4E8C; outline-offset: 2px; }
+
+/* ── Content area ───────────────────────────── */
+.rec-content {
+  margin-left: 224px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rec-contentheader {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 28px;
+  height: 44px;
+  background: var(--rec-head);
+  border-bottom: 1px solid var(--rec-border);
+}
+
+.rec-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.rec-breadcrumb-root { color: var(--rec-muted); }
+.rec-breadcrumb-sep  { color: var(--rec-border); }
+.rec-breadcrumb-page { color: var(--rec-accent); font-weight: 600; }
+
+.rec-body {
+  flex: 1;
+  padding: 28px 28px 48px;
+  max-width: 1400px;
+  width: 100%;
+  /* Force recruiter content text into steel palette */
+  color: var(--rec-text);
+}
+
+.rec-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: center;
+  padding: 10px 28px;
+  border-top: 1px solid var(--rec-border);
+  background: var(--rec-head);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--rec-muted);
+}
+.rec-footer-ethics { color: var(--rec-accent); }
+.rec-footer-link {
+  margin-left: auto;
+  color: var(--rec-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.rec-footer-link:hover { opacity: 0.75; }
+.rec-footer-link:focus-visible { outline: 2px solid #1F4E8C; outline-offset: 2px; }
+
+/* ── Mobile top bar ─────────────────────────── */
+.rec-mobile-bar {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 52px;
+  background: var(--rec-head);
+  border-bottom: 1px solid var(--rec-border);
+}
+
+.rec-hamburger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--rec-border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--rec-text);
+  cursor: pointer;
+}
+.rec-hamburger:focus-visible { outline: 2px solid #1F4E8C; outline-offset: 2px; }
+
+.rec-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  cursor: default;
+}
+
+/* ── Mobile breakpoint ──────────────────────── */
+@media (max-width: 1023px) {
+  .rec-mobile-bar { display: flex; }
+  .rec-sidebar-close { display: flex; }
+
+  .rec-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.18s ease;
+    top: 52px; /* below mobile bar */
+  }
+  .rec-sidebar-open { transform: translateX(0); }
+
+  .rec-content { margin-left: 0; }
+  .rec-contentheader { display: none; }
+  .rec-body { padding: 20px 16px 40px; }
+  .rec-footer { padding: 10px 16px; }
+}
+
+/* ── Reduced motion ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .rec-sidebar,
+  .rec-navlink,
+  .rec-logout-btn { transition: none !important; }
+}
+
+@media print {
+  .rec-sidebar,
+  .rec-contentheader,
+  .rec-footer,
+  .rec-mobile-bar { display: none !important; }
+  .rec-content { margin-left: 0; }
+  .rec-body { padding: 0; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CONTENT TOKEN REMAP — .rec-body scope
+   All existing recruiter pages use Tailwind --color-* tokens.
+   We remap them here to the dark steel palette so no page
+   rewrites are needed. Overrides :root values within this scope.
+   ════════════════════════════════════════════════════════════════ */
+.rec-body {
+  /* Surface & text */
+  --color-paper:      #0D1117;
+  --color-paper-2:    #10171F;
+  --color-card:       #141C26;
+  --color-ink:        #C5D5F0;
+  --color-ink-2:      #8BA8CC;
+  --color-ink-3:      #5A7490;
+  --color-rule:       #1E2D3D;
+
+  /* Verdicts — adjusted for dark bg contrast */
+  --color-proven:     #5BB88A;   /* green on dark */
+  --color-proven-bg:  #0E2A1C;
+  --color-partial:    #D4933A;   /* amber on dark */
+  --color-partial-bg: #291C0A;
+  --color-claimed:    #CC6B5A;   /* red on dark */
+  --color-claimed-bg: #2A100C;
+
+  --color-link:       #4A8FD4;
+  --color-forest:     #5BB88A;   /* maps old forest alias */
+  --color-lime:       #5BB88A;
+  --color-line:       #1E2D3D;
+  --color-muted:      #5A7490;
+
+  /* Ensure base color is applied */
+  color: var(--color-ink);
+  background: var(--color-paper);
+}
+
+/* Make white/hardcoded backgrounds inside rec-body readable */
+.rec-body input,
+.rec-body textarea,
+.rec-body select {
+  background: var(--color-card) !important;
+  color: var(--color-ink) !important;
+  border-color: var(--color-rule) !important;
+}
+.rec-body input::placeholder,
+.rec-body textarea::placeholder {
+  color: var(--color-ink-3) !important;
+  opacity: 1;
+}
+
+/* Force white-background panels/cards to use steel card */
+.rec-body [class*="bg-white"],
+.rec-body [style*="background: white"],
+.rec-body [style*="background:#fff"],
+.rec-body [style*="background: #fff"] {
+  background: var(--color-card) !important;
+  color: var(--color-ink) !important;
+}
+
+/* Fix red error boxes (hardcoded red-50/red-200) */
+.rec-body [class*="bg-red-"],
+.rec-body [class*="border-red-"] {
+  background: var(--color-claimed-bg) !important;
+  border-color: var(--color-claimed) !important;
+  color: var(--color-claimed) !important;
+}

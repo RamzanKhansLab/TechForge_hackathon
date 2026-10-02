@@ -7,7 +7,7 @@ import * as coach from '../controllers/coach.controller.js';
 import * as statsCtrl from '../controllers/stats.controller.js';
 import * as publicCtrl from '../controllers/public.controller.js';
 import * as authCtrl from '../controllers/auth.controller.js';
-import { requireAuth, csrfGuard } from '../middlewares/auth.js';
+import { requireAuth, requireRole, csrfGuard } from '../middlewares/auth.js';
 import { uploadResume } from '../middlewares/upload.js';
 import { validateId } from '../middlewares/validation.js';
 import { SKILLS } from '../data/skills.js';
@@ -45,40 +45,43 @@ router.get('/stats', statsCtrl.stats);
 
 
 // ── Existing analysis routes (unchanged) ─────────────────────────────────────
-router.post('/analysis', analysisLimit, uploadResume, analysis.create);
-router.post('/analysis/demo', analysis.demo);
+router.get('/demo/:id', analysis.demo);
+router.post('/reports/claim', requireAuth, requireRole('student'), csrfGuard, analysis.claimLegacy);
+router.post('/analysis', requireAuth, requireRole('student'), csrfGuard, analysisLimit, uploadResume, analysis.create);
+router.get('/analysis', requireAuth, requireRole('student'), analysis.list);
 router.use('/analysis/:id', validateId);
 
-router.get('/analysis/:id', analysis.read);
-router.get('/analysis/:id/skills', analysis.skills);
-router.get('/analysis/:id/skills/:skill', analysis.skill);
-router.get('/analysis/:id/repositories', analysis.repositories);
-router.post('/analysis/:id/retry', analysisLimit, analysis.retry);
-router.post('/analysis/:id/reanalyze', analysisLimit, analysis.reanalyze);
-router.get('/analysis/:id/diff', analysis.diff);
-router.post('/analysis/:id/share', analysis.share);
-router.get('/analysis/:id/export', analysis.auditExport);
-router.delete('/analysis/:id', analysis.remove);
-
-router.get('/share/:shareId', analysis.getShared);
+router.get('/analysis/:id', requireAuth, requireRole('student'), analysis.read);
+router.get('/analysis/:id/skills', requireAuth, requireRole('student'), analysis.skills);
+router.get('/analysis/:id/skills/:skill', requireAuth, requireRole('student'), analysis.skill);
+router.get('/analysis/:id/repositories', requireAuth, requireRole('student'), analysis.repositories);
+router.post('/analysis/:id/retry', requireAuth, requireRole('student'), csrfGuard, analysisLimit, analysis.retry);
+router.post('/analysis/:id/reanalyze', requireAuth, requireRole('student'), csrfGuard, analysisLimit, analysis.reanalyze);
+router.get('/analysis/:id/diff', requireAuth, requireRole('student'), analysis.diff);
+router.post('/analysis/:id/share', requireAuth, requireRole('student'), csrfGuard, analysis.share);
+router.get('/analysis/:id/export', requireAuth, requireRole('student'), analysis.auditExport);
+router.delete('/analysis/:id', requireAuth, requireRole('student'), csrfGuard, analysis.remove);
 
 // ── Coach / student routes (S1) ───────────────────────────────────────────────
 router.use('/reports/:id', validateId);
-router.get('/reports/:id/readiness', coach.readiness);
-router.get('/reports/:id/roadmap', coach.roadmap);
-router.get('/reports/:id/resume-fixes', coach.resumeFixes);
-router.post('/reports/:id/tasks/:taskId/check', checkLimit, coach.taskCheck);
-router.get('/reports/:id/roles/compare', coach.rolesCompare);
+router.get('/reports/:id/readiness', requireAuth, requireRole('student'), coach.readiness);
+router.get('/reports/:id/roadmap', requireAuth, requireRole('student'), coach.roadmap);
+router.get('/reports/:id/resume-fixes', requireAuth, requireRole('student'), coach.resumeFixes);
+router.post('/reports/:id/tasks/:taskId/check', requireAuth, requireRole('student'), csrfGuard, checkLimit, coach.taskCheck);
+router.get('/reports/:id/roles/compare', requireAuth, requireRole('student'), coach.rolesCompare);
 
 // ── Existing job routes (unchanged) + target-role tag ────────────────────────
-router.post('/jobs/analyze', jobLimit, jobs.create);
+router.post('/jobs/analyze', requireAuth, requireRole('student'), csrfGuard, jobLimit, jobs.create);
 router.use('/jobs/:id', validateId);
-router.get('/jobs/:id', jobs.read);
-router.get('/jobs/:id/match', jobs.match);
-router.patch('/jobs/:id/tasks/:skill', jobs.task);
-router.patch('/jobs/:id/target', coach.tagRole);
+router.get('/jobs/:id', requireAuth, requireRole('student'), jobs.read);
+router.get('/jobs/:id/match', requireAuth, requireRole('student'), jobs.match);
+router.patch('/jobs/:id/tasks/:skill', requireAuth, requireRole('student'), csrfGuard, jobs.task);
+router.patch('/jobs/:id/target', requireAuth, requireRole('student'), csrfGuard, coach.tagRole);
 
 // ── Public / Recruiter routes (S2) ──────────────────────────────────────────
-router.get('/public/:shareToken/summary', publicCtrl.getSummary);
-router.post('/public/:shareToken/match', jobLimit, publicCtrl.matchJd);
-router.post('/public/compare', jobLimit, publicCtrl.compareCandidates);
+router.get('/public/:shareToken', requireAuth, requireRole('recruiter'), publicCtrl.getProfile);
+router.get('/public/:shareToken/summary', requireAuth, requireRole('recruiter'), publicCtrl.getSummary);
+router.post('/public/:shareToken/match', requireAuth, requireRole('recruiter'), csrfGuard, jobLimit, publicCtrl.matchJd);
+router.post('/public/compare', requireAuth, requireRole('recruiter'), csrfGuard, jobLimit, publicCtrl.compareCandidates);
+router.get('/recruiter/opened', requireAuth, requireRole('recruiter'), publicCtrl.opened);
+router.get('/reports/:id/share/access-log', requireAuth, requireRole('student'), publicCtrl.accessLog);

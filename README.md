@@ -5,18 +5,36 @@
 
 ---
 
-## ⚡ What is SkillProof?
+## 👥 Team & Submission Information
 
-Traditional technical hiring relies on self-reported resume skill bullets or opaque AI resume screeners that hallucinate inferences. **SkillProof** replaces both with an **Auditable Verification Ledger**.
+### 1. Team Details
+- **Team Name**: SkillProof Engineers
+- **Team Members**: Aman Mishra, Kartik Nair, Ramzan Khan
 
-- **Zero LLM Hallucinations**: 100% deterministic ontology matching and graph expansion with decay.
-- **Concrete Artifact Evidence**: Every verified point links to actual GitHub manifests, deep file trees, and commit hashes.
-- **Anti-Gaming Trust Signals**: Penalizes tutorial clones, commit dumping bursts, empty forks, and vendored code (`node_modules` committed directly).
-- **Audit Ledger Design**: Strict high-density tabular typography using *Fraunces* serif headings, *IBM Plex Sans* body, and *IBM Plex Mono* evidence badges with hairline borders.
+### 2. Problem Statement
+- **Problem Statement Name**: Verification & Validation of Developer Skill Claims in Technical Hiring
+- **Selected Domain**: EdTech / HRTech / Automated Skill Verification & Hiring Infrastructure
+
+### 3. Project Details
+- **Project Title**: SkillProof - Auditable Developer Skill Verification Ledger
+- **Short Description**: SkillProof is a deterministic skill verification platform that eliminates resume inflation and opaque AI screener hallucinations by matching PDF resume claims directly against public GitHub repository artifacts, build manifests, and commit history. It generates an auditable, score-backed evidence ledger classified as `Proven`, `Partial`, or `Claimed-only` with automated anti-gaming trust checks. The platform empowers candidates with actionable learning roadmaps while providing recruiters with tamper-evident evidence sheets and job-matching matrices.
 
 ---
 
-## 🏛️ System Architecture
+## ⚡ Project Overview
+
+Traditional technical hiring relies heavily on self-reported resume bullets or black-box AI resume screeners that frequently hallucinate inferences. **SkillProof** replaces both with a **Deterministic Verification Ledger**:
+
+- **Zero LLM Hallucinations**: 100% deterministic ontology matching and graph expansion with recency and depth decay.
+- **Concrete Artifact Evidence**: Every verified skill links to real GitHub build manifests (`package.json`, `go.mod`, `Cargo.toml`), file AST trees, and candidate commit hashes.
+- **Anti-Gaming Trust Signals**: Automated algorithms detect and penalize tutorial clones, commit dumping bursts, empty forks, and vendored code (`node_modules` committed directly).
+- **Dual Lens Design**: 
+  - **Student Lab Notebook**: Warm paper-based workspace with readiness summaries, DAG learning roadmaps, resume bullet fixes, and micro-task verification.
+  - **Recruiter Case Desk**: High-density cool steel desk for talent acquisition with candidate share verification, requirement matrices, and audit evidence sheets.
+
+---
+
+## 🏛️ Architecture & Workflow
 
 ```text
                                ┌────────────────────────┐
@@ -86,49 +104,59 @@ Every skill is evaluated against an objective, auditable rubric out of 100 possi
 | **Time-span Depth** | 15 pts | Active commit history spanning > 12 months on repositories |
 | **Graph Implication** | 15 pts | Transitive implication from parent technologies (e.g. Next.js implies React) |
 
-**Classification Thresholds:**
+**Classification Verdicts:**
 - **PROVEN** (`≥ 70 pts`): Solid multi-repository or multi-file artifact trail with candidate commits.
 - **PARTIAL** (`30 - 69 pts`): Documented presence in dependencies or single commits without extended tenure.
-- **CLAIMED** (`< 30 pts`): Listed on resume with no public repository artifact backing.
+- **CLAIMED-ONLY** (`< 30 pts`): Listed on resume with no public repository artifact backing.
 
 ---
 
 ## 🛡️ Anti-Gaming Trust Signals
 
-To protect against resume inflation and repository staging, candidate repositories are processed through automated trust heuristics:
+Candidate repositories are automatically screened through trust heuristics:
 
-1. **`FORK_NO_OWN_COMMITS`**: Candidate forked an active open-source project but authored 0 commits. Multiplier penalized.
-2. **`TEMPLATE_OR_TUTORIAL`**: Matches known educational boilerplate names (e.g., `freecodecamp`, `react-tutorial`, `100-days-of-code`) or Create-React-App default README text (Jaccard similarity `> 0.70`).
+1. **`FORK_NO_OWN_COMMITS`**: Candidate forked an active open-source project but authored 0 commits.
+2. **`TEMPLATE_OR_TUTORIAL`**: Matches known educational boilerplate names (`freecodecamp`, `react-tutorial`, `100-days-of-code`) or CRA default README text (Jaccard similarity `> 0.70`).
 3. **`SINGLE_COMMIT_DUMP`**: >90% of repository lines created in a single initial commit with no subsequent iterative history.
-4. **`COMMIT_BURST`**: Artificial bursts (>20 commits created in <24 hours before interview).
+4. **`COMMIT_BURST`**: Artificial bursts (>20 commits created in <24 hours before submission).
 5. **`VENDORED_CODE`**: Committed `node_modules/`, `vendor/`, or `.venv/` inflating language metrics.
 
 ---
 
 ## 🚀 Key Features
 
-- **Audit Ledger Interface**: Section B high-density theme featuring Fraunces serifs, hairline borders, and inline SVG textured stamps (`--proven`, `--partial`, `--claimed`).
-- **Interactive Experience Dumbbell Chart**: Visualizes the delta between candidate-claimed years and verifiable commit history timeline.
-- **Skill Detail Slide-Over Drawer**: Click any skill row to view its exact score breakdown, repository links, file paths, and trust audits.
-- **Audit Differential & Re-Analysis Mode**: Re-analyze a profile after code changes to view an itemized side-by-side ledger diff with highlighted delta tags.
-- **Job Description Reconciliation**: Paste any job description to calculate verified match coverage, identify missing technical requirements, and view tailored micro-tasks.
-- **Cryptographic Export & Share Profile**:
-  - Export audit dossier as tamper-evident JSON with cryptographic payload hash.
-  - Generate embeddable Markdown README badges for GitHub profiles (`[![SkillProof Verified]](...)`).
-  - Read-only public share links with capability-based security.
-- **⚡ Instant Verified Demo Dossier**: One-click demo loader (`POST /api/analysis/demo`) instantly hydrates a full senior full-stack audit report for presentations without GitHub rate limit bottlenecks.
+### For Candidates (Student Lab Notebook)
+- **Proof Readiness Summary**: Instant overview of claimed vs. proven vs. partial skills with custom verdict stamps.
+- **Interactive Experience Dumbbell Chart**: Visualizes claimed experience vs. verifiable commit history timeline.
+- **DAG Learning Roadmap**: Topologically sorted learning path based on prerequisite dependencies and difficulty.
+- **Resume Bullet Fix Generator**: Auto-generated bullet point improvements tailored to verified evidence.
+- **Micro-Task Verification Workspace**: Interactive micro-tasks with live GitHub commit checking to upgrade `Partial` or `Claimed` skills to `Proven`.
+
+### For Recruiters (Recruiter Case Desk)
+- **Shared Profile Verification**: Access revoked-gated candidate share profiles with strict organisation access audit logging.
+- **Requirement Matching Matrix**: Compare candidate evidence directly against job descriptions with percentage match scores and gap breakdowns.
+- **Audit Evidence Sheet**: Deep dive into manifest citations, commit SHA links, and anti-gaming flag notes.
 
 ---
 
-## 💻 Tech Stack
+## 💻 Technology Stack
 
-- **Frontend**: React 19, Vite, Tailwind CSS 4, Lucide Icons, Vanilla CSS Design System (`index.css`).
-- **Backend**: Node.js 22, Express 5, Mongoose 8, MongoDB Atlas, Multer, `pdf-parse`, Cloudinary SDK.
-- **Test Suite**: Native Node.js Test Runner (`node --test`), 21 passing test suites.
+- **Frontend**: React 19, Vite, React Router 7, Tailwind CSS 4, Lucide Icons, Custom Design Tokens (`Fraunces` & `IBM Plex`).
+- **Backend**: Node.js 22, Express 5, Mongoose 8, MongoDB Atlas, Multer, `pdf-parse`, Cloudinary SDK, Zod, Helmet.
+- **Authentication & Security**: HttpOnly Cookie Sessions, JWT access tokens, double-submit CSRF protection, rate-limiting, and owner-isolated queries.
+- **Test Suite**: Native Node.js Test Runner (`node --test`), 25+ integration & unit test files.
 
 ---
 
-## 🏃 Quickstart & Installation
+## 📡 Dataset & API Information
+
+- **GitHub REST API v3**: Fetches repository metadata, commit histories, trees, and file contents deterministically.
+- **Ontology Dataset**: Built-in 250+ technical skills ontology mapping technologies, package names (`package.json`, `PyPI`, `Go`), file extensions, and DAG relationships.
+- **Cloudinary Storage API**: Secure authenticated PDF resume storage with metadata indexed in MongoDB Atlas.
+
+---
+
+## 🏃 Setup & Installation Instructions
 
 ### Prerequisites
 - Node.js `22.x`
@@ -138,18 +166,13 @@ To protect against resume inflation and repository staging, candidate repositori
 ```bash
 git clone https://github.com/RamzanKhansLab/TechForge_hackathon.git
 cd TechForge_hackathon
-npm ci
-npm ci --prefix backend
-npm ci --prefix frontend
+npm run setup
 ```
 
 ### 2. Configure Environment
-Copy `.env.example` templates:
+Copy `.env.example` templates in both `backend` and `frontend`:
 ```bash
-# Backend configuration
 cp backend/.env.example backend/.env
-
-# Frontend configuration
 cp frontend/.env.example frontend/.env
 ```
 
@@ -168,33 +191,44 @@ COOKIE_SECRET=replace-with-a-random-32-character-minimum-secret
 COOKIE_SECURE=false
 ```
 
-For Vercel, replace `YOUR-RENDER-SERVICE` in `frontend/vercel.json` with the deployed
-Render service name. The `/api/(.*)` rewrite keeps production cookies first-party. Set
-`COOKIE_SECURE=true` in production; startup rejects insecure cookies or default/short JWT
-and refresh secrets.
-
-### 3. Run Dev Server
+### 3. Start Local Servers
 ```bash
-# Run both frontend and backend concurrently
+# Start frontend and backend concurrently
 npm run dev
 ```
-- Web Application: `http://localhost:5173`
-- REST API: `http://localhost:8000/api`
+- **Frontend App**: `http://localhost:5173`
+- **REST API**: `http://localhost:8000/api`
 
 ### 4. Run Automated Test Suite
 ```bash
-cd backend
-npm test
+npm test --prefix backend
 ```
-All 21 comprehensive tests covering ontology normalization, anti-gaming algorithms, scoring monotonicity, and differential calculation will execute synchronously.
 
 ---
 
-## 🏆 Hackathon Demo Guide
+## 📸 Screenshots & Demo Information
 
-1. Navigate to `http://localhost:5173/analyze`.
-2. Click **⚡ Load Verified Demo Dossier** for an immediate, production-grade senior full-stack audit ledger.
-3. **Inspect the Dumbbell Chart**: Notice Kubernetes flagged with a `YEARS_MISMATCH` (4 claimed vs 1 verifiable year).
-4. **Slide-Over Skill Drawer**: Click on `React` or `Redis` in the Skills Table to see manifest citations, candidate commits, and positive discovered strengths.
-5. **Role Reconciliation**: Click **Match to a role**, paste target senior backend requirements, and observe the live coverage delta.
-6. **Live Badging & Export**: Click **Share** to copy the GitHub markdown badge or download the cryptographic JSON export file.
+### Demo Walkthrough
+1. **Landing & Authentication**: Register or sign in as a **Student** or **Recruiter**.
+2. **Analysis Creation**: Upload a PDF resume and enter a GitHub username.
+3. **Student View (`/student`)**:
+   - Inspect **Readiness Overview** and total skill counts.
+   - Click **Get Share Link** to generate a public capability URL for recruiters.
+   - Explore **Proof Roadmap**, **Resume Fixes**, and **Micro-Tasks**.
+4. **Recruiter View (`/recruiter`)**:
+   - Open a shared candidate link or paste a job description.
+   - View high-density requirement matrices and audit evidence details.
+
+---
+
+## 🔮 Limitations & Future Scope
+
+### Current Limitations
+- **Public GitHub Only**: Analysis is intentionally restricted to public GitHub repositories to remain deterministic and non-intrusive.
+- **Deterministic MVP**: No private repo code execution, OCR, or LLM-based code generation.
+- **GitHub Rate Limits**: Unauthenticated GitHub API calls are capped at 60 requests/hr (resolved by supplying `GITHUB_TOKEN`).
+
+### Future Scope
+- **GitLab & Bitbucket Integration**: Expand evidence collection to other public version control platforms.
+- **Verifiable Cryptographic Proofs**: Issue W3C Verifiable Credentials (VCs) for proven skill claims.
+- **Org-Level Recruiter Teams**: Multi-tenant employer accounts with candidate comparison shortlists.
