@@ -8,13 +8,13 @@
 ## 👥 Team & Submission Information
 
 ### 1. Team Details
-- **Team Name**: SkillProof Engineers
+- **Team Name**: CodePrefix
 - **Team Members**: Aman Mishra, Kartik Nair, Ramzan Khan
 
 ### 2. Problem Statement
-- **Problem Statement Name**: Verification & Validation of Developer Skill Claims in Technical Hiring
-- **Selected Domain**: EdTech / HRTech / Automated Skill Verification & Hiring Infrastructure
-
+- **Problem Statement Name**: SkillProof - Verification & Validation of Developer Skill Claims in Technical Hiring
+- **Selected Domain**: Edutech
+  
 ### 3. Project Details
 - **Project Title**: SkillProof - Auditable Developer Skill Verification Ledger
 - **Short Description**: SkillProof is a deterministic skill verification platform that eliminates resume inflation and opaque AI screener hallucinations by matching PDF resume claims directly against public GitHub repository artifacts, build manifests, and commit history. It generates an auditable, score-backed evidence ledger classified as `Proven`, `Partial`, or `Claimed-only` with automated anti-gaming trust checks. The platform empowers candidates with actionable learning roadmaps while providing recruiters with tamper-evident evidence sheets and job-matching matrices.
