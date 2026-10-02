@@ -13,7 +13,9 @@ export const analysisApi = {
   share: (id, isPublic) => client.post(`/analysis/${id}/share`, { isPublic }, config(id)),
   getShared: (shareId, signal) => client.get(`/share/${shareId}`, { signal }),
   exportData: (id, signal) => client.get(`/analysis/${id}/export`, { ...config(id), signal }),
+  loadDemo: () => client.post('/analysis/demo', {}),
   remove: id => client.delete(`/analysis/${id}`,config(id)),
 };
+
 
 

@@ -31,6 +31,11 @@ export async function auditExport(req,res) {
   const exportData = await service.generateAuditExport(req.params.id, token(req));
   res.json({ success: true, data: exportData });
 }
+export async function demo(req,res) {
+  const result = await service.seedDemo();
+  res.json({ success: true, data: result });
+}
 export async function remove(req,res) { await service.removeAnalysis(req.params.id,token(req)); res.json({ success: true, data: { deleted: true } }); }
+
 
 

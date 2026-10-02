@@ -18,7 +18,9 @@ router.get('/health', (req,res) => { const ready = mongoose.connection.readyStat
 router.get('/meta', (req,res) => res.json({ success: true, data: { maxFileSizeMb: env.MAX_FILE_SIZE_MB, maxRepositories: env.MAX_REPOSITORIES, skills: SKILLS.map(({id,name,category}) => ({id,name,category})), scoring: SCORING } }));
 router.get('/ontology/search', searchLimit, (req, res) => res.json({ success: true, data: searchOntology(req.query.q) }));
 router.post('/analysis', analysisLimit, uploadResume, analysis.create);
+router.post('/analysis/demo', analysis.demo);
 router.use('/analysis/:id', validateId);
+
 router.get('/analysis/:id', analysis.read);
 router.get('/analysis/:id/skills', analysis.skills);
 router.get('/analysis/:id/skills/:skill', analysis.skill);

@@ -27,7 +27,37 @@ export default function Analyze() {
       <ResumeUpload file={file} onChange={chooseFile} maxSize={maxSize} disabled={busy}/><div className="mt-7"><label className="label" htmlFor="github-username">GitHub username <span className="font-normal text-muted">*</span></label><div className="relative"><Github className="absolute left-4 top-3.5 text-muted" size={18}/><input id="github-username" className="input pl-11" placeholder="e.g. octocat" value={username} onChange={e => setUsername(e.target.value)} required maxLength={39} disabled={busy} autoComplete="off" spellCheck={false}/></div><p className="mt-2 text-xs text-muted">We inspect public, non-fork repositories. No GitHub sign-in needed.</p></div>
       <label className="my-7 flex items-start gap-3 text-xs leading-5 text-muted"><input className="mt-1 size-4 shrink-0 accent-forest" type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} required disabled={busy}/>I own this resume or have permission to process it, and understand that the PDF will be stored privately for this report.</label>
       {error && <div className="mb-5"><ErrorNotice error={error}/></div>}{metaError && <div className="mb-5"><ErrorNotice error={metaError} retry={reload}/></div>}
-      <button className="btn btn-primary w-full" disabled={busy || !consent}>{busy ? <><LoaderCircle size={17} className="animate-spin"/>{uploadPercent < 100 ? `Uploading resume… ${uploadPercent}%` : 'Storing and processing resume…'}</> : <>Analyze candidate<ArrowRight size={17}/></>}</button><p className="mt-4 text-center text-[11px] text-muted" role={busy ? 'status' : undefined}>{busy ? 'Keep this page open until your report is created.' : 'Your report is private to its access key. Save the key to keep access.'}</p>
+      <button className="btn btn-primary w-full" disabled={busy || !consent}>{busy ? <><LoaderCircle size={17} className="animate-spin"/>{uploadPercent < 100 ? `Uploading resume… ${uploadPercent}%` : 'Storing and processing resume…'}</> : <>Analyze candidate<ArrowRight size={17}/></>}</button>
+      <div className="mt-4 flex items-center justify-center gap-2">
+        <span className="text-[11px] text-muted font-sans">Want to explore instantly without uploading?</span>
+        <button
+          type="button"
+          onClick={async () => {
+            setBusy(true);
+            try {
+              const res = await analysisApi.loadDemo();
+              remember({
+                type: 'analysis',
+                id: res.data.analysisId,
+                token: res.data.accessToken,
+                label: 'demo-engineer',
+                createdAt: new Date().toISOString(),
+                status: 'completed'
+              });
+              navigate(`/analysis/${res.data.analysisId}`);
+            } catch (e) {
+              setError(e.message || 'Failed to load sample demo report');
+            } finally {
+              setBusy(false);
+            }
+          }}
+          className="text-[11px] font-mono font-semibold text-[#2e6b3e] underline hover:text-black cursor-pointer"
+        >
+          Load Verified Demo Dossier ↗
+        </button>
+      </div>
+      <p className="mt-3 text-center text-[11px] text-muted" role={busy ? 'status' : undefined}>{busy ? 'Keep this page open until your report is created.' : 'Your report is private to its access key. Save the key to keep access.'}</p>
     </form><aside className="space-y-5"><div className="analyze-aside p-7"><p className="eyebrow mb-6">What’s inside your report</p>{[{icon:FileSearch,title:'Resume skill map',text:'Technical skills extracted and grouped by category.'},{icon:GitBranch,title:'Repository evidence',text:'Dependencies, languages, activity, tests, and configuration.'},{icon:ShieldCheck,title:'A transparent skill picture',text:'Proven, Partial, or Claimed-only — with reasons you can inspect.'}].map(({icon:Icon,title,text}) => <div className="mb-6 flex gap-4 last:mb-0" key={title}><span className="h-fit rounded-lg bg-white/70 p-2.5 text-[#607d4b]"><Icon size={18}/></span><div><h3 className="text-sm font-semibold">{title}</h3><p className="mt-1.5 text-xs leading-5 text-muted">{text}</p></div></div>)}</div><div className="panel flex gap-3 p-5"><LockKeyhole size={18} className="mt-1 shrink-0 text-muted"/><p className="text-xs leading-5 text-muted">Your resume stays private. Report access is saved in this browser, and you can delete the report and stored PDF after processing.</p></div><Note>Public code is only part of someone’s experience. These results describe available evidence, not overall competence. <Link to="/methodology" className="underline">Read the methodology.</Link></Note></aside></div>
   </>;
+
 }

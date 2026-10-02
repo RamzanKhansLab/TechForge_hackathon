@@ -116,6 +116,12 @@ export async function generateAuditExport(id, token) {
   return payload;
 }
 
+import { seedDemoReport } from './sample.fixture.js';
+
+export async function seedDemo() {
+  return await seedDemoReport();
+}
+
 export async function removeAnalysis(id, token) {
   const analysis = await getAnalysis(id, token);
   if (['processing','queued'].includes(analysis.status)) throw new AppError(409, 'ANALYSIS_BUSY', 'Wait for analysis to finish before deleting it.');
@@ -123,5 +129,6 @@ export async function removeAnalysis(id, token) {
   await JobAnalysis.deleteMany({ analysisId: id });
   await Analysis.deleteOne({ _id: id });
 }
+
 
 
