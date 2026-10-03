@@ -21,10 +21,30 @@ export default function RequirementMatrix() {
   const [error, setError] = useState(null);
 
   const parseToken = (input) => {
-    if (!input) return '';
+    if (!input || typeof input !== 'string') return '';
     let trimmed = input.trim();
-    if (trimmed.includes('/share/')) trimmed = trimmed.split('/share/')[1];
-    if (trimmed.includes('/sheet/')) trimmed = trimmed.split('/sheet/')[1];
+    if (!trimmed) return '';
+
+    try {
+      if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+        const parsedUrl = new URL(trimmed);
+        const path = parsedUrl.pathname;
+        if (path.includes('/share/')) {
+          trimmed = path.split('/share/')[1];
+        } else if (path.includes('/sheet/')) {
+          trimmed = path.split('/sheet/')[1];
+        } else {
+          trimmed = path.split('/').filter(Boolean).pop() || trimmed;
+        }
+      } else {
+        if (trimmed.includes('/share/')) trimmed = trimmed.split('/share/')[1];
+        if (trimmed.includes('/sheet/')) trimmed = trimmed.split('/sheet/')[1];
+      }
+    } catch {
+      if (trimmed.includes('/share/')) trimmed = trimmed.split('/share/')[1];
+      if (trimmed.includes('/sheet/')) trimmed = trimmed.split('/sheet/')[1];
+    }
+
     return trimmed.split(/[?#]/)[0].replace(/\/$/, '').trim();
   };
 
