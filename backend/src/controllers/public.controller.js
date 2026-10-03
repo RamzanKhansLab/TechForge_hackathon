@@ -41,16 +41,25 @@ async function sharedReport(token) {
 
 async function recordAccess(analysis, recruiter, action) {
   if (!recruiter?._id) return;
-  const since = new Date(Date.now() - 30 * 60 * 1000);
-  const existing = await ShareAccessLog.findOne({ reportId: analysis._id, recruiterUserId: recruiter._id, action, openedAt: { $gte: since } });
-  if (!existing) {
-    await ShareAccessLog.create({
+  try {
+    const since = new Date(Date.now() - 30 * 60 * 1000);
+    const existing = await ShareAccessLog.findOne({
       reportId: analysis._id,
-      shareTokenId: analysis.shareId,
       recruiterUserId: recruiter._id,
-      recruiterOrg: recruiter.orgName || recruiter.name || 'Verified Recruiter',
-      action
+      action,
+      openedAt: { $gte: since }
     });
+    if (!existing) {
+      await ShareAccessLog.create({
+        reportId: analysis._id,
+        shareTokenId: analysis.shareId || String(analysis._id),
+        recruiterUserId: recruiter._id,
+        recruiterOrg: recruiter.orgName || recruiter.name || 'Verified Recruiter',
+        action
+      });
+    }
+  } catch (err) {
+    console.error('[RecordAccess] Non-fatal log error:', err.message);
   }
 }
 
