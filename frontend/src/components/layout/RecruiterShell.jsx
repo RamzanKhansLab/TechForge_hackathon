@@ -9,7 +9,6 @@ import './RecruiterShell.css';
 
 const NAV = [
   { label: 'Evidence Desk',      to: '/recruiter', icon: ShieldCheck, end: true },
-  { label: 'Evidence Sheet',     to: '/recruiter/sheet', icon: FileSpreadsheet, prefix: '/recruiter/sheet' },
   { label: 'Requirement Matrix', to: '/recruiter/compare', icon: GitCompare },
   { label: 'Methodology',        to: '/methodology', icon: Scale },
 ];

@@ -7,7 +7,7 @@ import * as coach from '../controllers/coach.controller.js';
 import * as statsCtrl from '../controllers/stats.controller.js';
 import * as publicCtrl from '../controllers/public.controller.js';
 import * as authCtrl from '../controllers/auth.controller.js';
-import { requireAuth, requireRole, csrfGuard } from '../middlewares/auth.js';
+import { requireAuth, optionalAuth, requireRole, csrfGuard } from '../middlewares/auth.js';
 import { uploadResume } from '../middlewares/upload.js';
 import { validateId } from '../middlewares/validation.js';
 import { SKILLS } from '../data/skills.js';
@@ -79,9 +79,12 @@ router.patch('/jobs/:id/tasks/:skill', requireAuth, requireRole('student'), csrf
 router.patch('/jobs/:id/target', requireAuth, requireRole('student'), csrfGuard, coach.tagRole);
 
 // ── Public / Recruiter routes (S2) ──────────────────────────────────────────
+
+// Unauthenticated: anyone with the share link can view the public ledger
+router.get('/share/:shareId', publicCtrl.getSharedView);
 router.get('/public/:shareToken', requireAuth, requireRole('recruiter'), publicCtrl.getProfile);
 router.get('/public/:shareToken/summary', requireAuth, requireRole('recruiter'), publicCtrl.getSummary);
 router.post('/public/:shareToken/match', requireAuth, requireRole('recruiter'), csrfGuard, jobLimit, publicCtrl.matchJd);
-router.post('/public/compare', requireAuth, requireRole('recruiter'), csrfGuard, jobLimit, publicCtrl.compareCandidates);
+router.post('/public/compare', optionalAuth, jobLimit, publicCtrl.compareCandidates);
 router.get('/recruiter/opened', requireAuth, requireRole('recruiter'), publicCtrl.opened);
 router.get('/reports/:id/share/access-log', requireAuth, requireRole('student'), publicCtrl.accessLog);

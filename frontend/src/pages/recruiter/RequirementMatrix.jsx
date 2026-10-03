@@ -6,8 +6,12 @@ import { Button } from '../../ui/index.js';
 import { FileSpreadsheet, AlertTriangle, ArrowLeft, CheckCircle2, CircleDashed, XCircle, Info, ExternalLink } from 'lucide-react';
 
 export default function RequirementMatrix() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const tokens = searchParams.getAll('t').filter(Boolean);
+
+  const [candidateTokens, setCandidateTokens] = useState(() => {
+    return tokens.length > 0 ? tokens : ['5940f081d68367a8', '8818f67b2372dea2'];
+  });
 
   const [jdText, setJdText] = useState(
     'Requirements:\n- Must have experience with React and Docker\n- Required: Node.js, TypeScript\nPreferred: Kubernetes, GraphQL'
@@ -16,9 +20,18 @@ export default function RequirementMatrix() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const runCompare = async (textToCompare) => {
-    if (!tokens || tokens.length === 0) {
-      setError('No candidate share tokens provided in URL (?t=token1&t=token2).');
+  const parseToken = (input) => {
+    if (!input) return '';
+    let trimmed = input.trim();
+    if (trimmed.includes('/share/')) trimmed = trimmed.split('/share/')[1];
+    if (trimmed.includes('/sheet/')) trimmed = trimmed.split('/sheet/')[1];
+    return trimmed.split(/[?#]/)[0].replace(/\/$/, '').trim();
+  };
+
+  const runCompare = async (targetTokens, textToCompare) => {
+    const validTokens = targetTokens.map(parseToken).filter(Boolean);
+    if (!validTokens || validTokens.length === 0) {
+      setError('Please provide at least 1 candidate share token or link.');
       return;
     }
     if (!textToCompare || textToCompare.trim().length < 10) {
@@ -28,8 +41,8 @@ export default function RequirementMatrix() {
     try {
       setLoading(true);
       setError(null);
-      const res = await publicApi.compare(tokens, textToCompare.trim());
-      setMatrixData(res.data);
+      const res = await publicApi.compare(validTokens, textToCompare.trim());
+      setMatrixData(res.data || res);
     } catch (err) {
       setError(err.message || 'Comparison failed.');
     } finally {
@@ -38,14 +51,43 @@ export default function RequirementMatrix() {
   };
 
   useEffect(() => {
-    if (tokens.length > 0) {
-      runCompare(jdText);
-    }
-  }, []);
+    const activeTokens = tokens.length > 0 ? tokens : ['5940f081d68367a8', '8818f67b2372dea2'];
+    setCandidateTokens(activeTokens);
+    runCompare(activeTokens, jdText);
+  }, [searchParams.toString()]);
 
   const handleUpdateJd = (e) => {
     e.preventDefault();
-    runCompare(jdText);
+    const valid = candidateTokens.map(parseToken).filter(Boolean);
+    if (valid.length === 0) {
+      setError('Please enter at least one candidate share token.');
+      return;
+    }
+    // Update URL query params
+    const newParams = new URLSearchParams();
+    valid.forEach(t => newParams.append('t', t));
+    setSearchParams(newParams);
+    runCompare(valid, jdText);
+  };
+
+  const updateCandidateToken = (index, val) => {
+    const updated = [...candidateTokens];
+    updated[index] = val;
+    setCandidateTokens(updated);
+    setError(null);
+  };
+
+  const addCandidateSlot = () => {
+    if (candidateTokens.length < 5) {
+      setCandidateTokens([...candidateTokens, '']);
+    }
+  };
+
+  const removeCandidateSlot = (index) => {
+    if (candidateTokens.length > 1) {
+      const updated = candidateTokens.filter((_, i) => i !== index);
+      setCandidateTokens(updated);
+    }
   };
 
   return (
@@ -71,34 +113,63 @@ export default function RequirementMatrix() {
         </div>
       </div>
 
-      {tokens.length === 0 ? (
-        <div className="p-8 text-center border border-rule bg-card rounded">
-          <p className="font-bold text-ink">No candidates selected</p>
-          <p className="text-xs text-ink-3 mt-1 mb-4">Add candidate share tokens from the Evidence Desk to compare.</p>
-          <Link to="/recruiter">
-            <Button variant="primary">Return to Evidence Desk</Button>
-          </Link>
-        </div>
-      ) : (
-        <>
-          {/* Job Description Input Form */}
-          <div className="border border-rule bg-card p-5 rounded-[2px] space-y-3">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-ink-3">EVALUATION CRITERIA</span>
-            <form onSubmit={handleUpdateJd} className="space-y-3">
+      {/* Evaluation Form & Candidate Tokens */}
+      <div className="border border-rule bg-card p-5 rounded-[2px] space-y-4">
+        <form onSubmit={handleUpdateJd} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-ink-3">CANDIDATE SHARE TOKENS</span>
+              {candidateTokens.map((t, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder={`Candidate #${i + 1} share token or link`}
+                    value={t}
+                    onChange={e => updateCandidateToken(i, e.target.value)}
+                    className="w-full p-2.5 text-xs font-mono border border-rule rounded bg-paper"
+                  />
+                  {candidateTokens.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeCandidateSlot(i)}
+                      className="text-xs text-ink-3 hover:text-red-700 px-1 font-mono"
+                      title="Remove candidate slot"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+              {candidateTokens.length < 5 && (
+                <button
+                  type="button"
+                  onClick={addCandidateSlot}
+                  className="text-[11px] font-mono text-forest hover:underline pt-1 block"
+                >
+                  + Add another candidate token
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-ink-3">EVALUATION CRITERIA</span>
               <textarea
-                rows={3}
+                rows={4}
                 value={jdText}
                 onChange={e => setJdText(e.target.value)}
                 placeholder="Paste Job Description requirements..."
                 className="w-full p-3 text-xs font-mono border border-rule rounded bg-paper"
               />
-              <div className="flex justify-end">
-                <Button type="submit" variant="primary" disabled={loading} className="text-xs">
-                  {loading ? 'Evaluating Matrix...' : 'Re-evaluate Matrix'}
-                </Button>
-              </div>
-            </form>
+            </div>
           </div>
+
+          <div className="flex justify-end pt-2 border-t border-rule">
+            <Button type="submit" variant="primary" disabled={loading} className="text-xs">
+              {loading ? 'Evaluating Matrix...' : 'Evaluate Requirement Matrix'}
+            </Button>
+          </div>
+        </form>
+      </div>
 
           {error && <ErrorNotice error={error} />}
 
@@ -192,8 +263,6 @@ export default function RequirementMatrix() {
               </div>
             </div>
           )}
-        </>
-      )}
     </div>
   );
 }

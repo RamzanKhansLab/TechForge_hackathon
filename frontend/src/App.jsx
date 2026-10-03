@@ -80,6 +80,7 @@ export default function App() {
         {/* ── Recruiter / Case Desk shell ───────────────────── */}
         <Route element={<RequireAuth role="recruiter"><RecruiterShell/></RequireAuth>}>
           <Route path="/recruiter" element={<RecruiterEntry/>}/>
+          <Route path="/recruiter/sheet" element={<RecruiterEntry/>}/>
           <Route path="/recruiter/sheet/:token" element={<EvidenceSheet/>}/>
           <Route path="/recruiter/compare" element={<RequirementMatrix/>}/>
         </Route>

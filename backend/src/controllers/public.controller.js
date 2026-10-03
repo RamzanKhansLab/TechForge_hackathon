@@ -6,23 +6,64 @@ import { buildPublicMatch, buildPublicCompare } from '../services/recruiter/publ
 
 const SHARE_ERROR = () => new AppError(404, 'SHARE_LINK_INVALID_OR_REVOKED', 'This shared report is unavailable.');
 
+// ── Shared view (unauthenticated) ─────────────────────────────────────────────
+// Validates share link and returns public payload.  No recruiter auth required.
+export async function getSharedView(req, res) {
+  const analysis = await Analysis.findOne({
+    shareId: req.params.shareId,
+    isPublic: true,
+    legacy: false,
+    status: 'completed'
+  }).lean();
+  if (!analysis) throw SHARE_ERROR();
+  // publicDocument handles plain objects (lean result) via its { ...document } fallback
+  res.json({ success: true, data: profilePayload(analysis) });
+}
+
+
 async function sharedReport(token) {
-  const analysis = await Analysis.findOne({ shareId: token, isPublic: true, legacy: false, status: 'completed' });
+  const cleanToken = String(token || '').trim().replace(/\/$/, '');
+  const isObjId = mongoose.Types.ObjectId.isValid(cleanToken);
+  const query = {
+    isPublic: true,
+    legacy: false,
+    status: 'completed'
+  };
+  if (isObjId) {
+    query.$or = [{ shareId: cleanToken }, { _id: cleanToken }];
+  } else {
+    query.shareId = cleanToken;
+  }
+  const analysis = await Analysis.findOne(query);
   if (!analysis) throw SHARE_ERROR();
   return analysis;
 }
 
 async function recordAccess(analysis, recruiter, action) {
+  if (!recruiter?._id) return;
   const since = new Date(Date.now() - 30 * 60 * 1000);
   const existing = await ShareAccessLog.findOne({ reportId: analysis._id, recruiterUserId: recruiter._id, action, openedAt: { $gte: since } });
   if (!existing) {
-    await ShareAccessLog.create({ reportId: analysis._id, shareTokenId: analysis.shareId, recruiterUserId: recruiter._id, recruiterOrg: recruiter.orgName, action });
+    await ShareAccessLog.create({
+      reportId: analysis._id,
+      shareTokenId: analysis.shareId,
+      recruiterUserId: recruiter._id,
+      recruiterOrg: recruiter.orgName || recruiter.name || 'Verified Recruiter',
+      action
+    });
   }
 }
 
 function profilePayload(analysis) {
   const doc = publicDocument(analysis);
   return {
+    // Identity fields used by SharedProfile.jsx
+    githubUsername: doc.githubUsername,
+    github: doc.github || {},
+    candidate: doc.candidate || {},
+    completedAt: doc.completedAt,
+    createdAt: doc.createdAt,
+    // Recruiter/summary fields
     handle: doc.githubUsername || doc.github?.login || 'candidate',
     analyzedAt: doc.completedAt || doc.createdAt,
     summary: doc.summary || {},
@@ -34,13 +75,21 @@ function profilePayload(analysis) {
 
 export async function getProfile(req, res) {
   const analysis = await sharedReport(req.params.shareToken);
-  await recordAccess(analysis, req.user, 'view');
+  try {
+    await recordAccess(analysis, req.user, 'view');
+  } catch (err) {
+    console.error('[RecordAccess] Log error:', err.message);
+  }
   res.json({ success: true, data: profilePayload(analysis) });
 }
 
 export async function getSummary(req, res) {
   const analysis = await sharedReport(req.params.shareToken);
-  await recordAccess(analysis, req.user, 'view');
+  try {
+    await recordAccess(analysis, req.user, 'view');
+  } catch (err) {
+    console.error('[RecordAccess] Log error:', err.message);
+  }
   const profile = profilePayload(analysis);
   res.json({ success: true, data: { handle: profile.handle, analyzedAt: profile.analyzedAt, summary: profile.summary, discrepancyFindings: profile.discrepancyReport } });
 }
@@ -49,7 +98,11 @@ export async function matchJd(req, res) {
   const { jdText, roleTitle } = req.body;
   if (!jdText || typeof jdText !== 'string' || jdText.trim().length < 10) throw new AppError(400, 'INVALID_JD_TEXT', 'Please provide a valid job description with at least 10 characters.');
   const analysis = await sharedReport(req.params.shareToken);
-  await recordAccess(analysis, req.user, 'match');
+  try {
+    await recordAccess(analysis, req.user, 'match');
+  } catch (err) {
+    console.error('[RecordAccess] Log error:', err.message);
+  }
   res.json({ success: true, data: buildPublicMatch(publicDocument(analysis), jdText, roleTitle) });
 }
 
@@ -60,9 +113,14 @@ export async function compareCandidates(req, res) {
   const resolved = await Promise.all(tokens.map(async token => {
     try {
       const analysis = await sharedReport(token);
-      await recordAccess(analysis, req.user, 'compare');
+      try {
+        await recordAccess(analysis, req.user, 'compare');
+      } catch (logErr) {
+        console.error('[RecordAccess] Log error:', logErr.message);
+      }
       return { token, analysis: publicDocument(analysis) };
     } catch (error) {
+      console.error('[Compare] Error resolving token:', token, error);
       return { token, analysis: null, error: error.code || 'TOKEN_INVALID_OR_REVOKED' };
     }
   }));

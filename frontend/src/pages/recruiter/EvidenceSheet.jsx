@@ -26,12 +26,15 @@ export default function EvidenceSheet() {
       try {
         setLoading(true);
         setError(null);
-        const [profileRes, summaryRes] = await Promise.all([
-          publicApi.getSharedProfile(token),
-          publicApi.getSummary(token).catch(() => null)
-        ]);
-        setProfile(profileRes.data);
-        if (summaryRes?.data) setSummaryData(summaryRes.data);
+        // Use the unauthenticated /share/:shareId route — works for any user role.
+        // The recruiter-only /public/:token route is attempted for extra summary data
+        // but silently skipped if the viewer doesn't have the recruiter role.
+        const profileRes = await publicApi.getSharedView(token);
+        setProfile(profileRes.data || profileRes);
+        // Recruiter-enhanced summary (optional — ignore role/auth errors)
+        publicApi.getSummary(token)
+          .then(r => { if (r) setSummaryData(r.data || r); })
+          .catch(() => null);
       } catch (err) {
         setError(err.message || 'This candidate share link is invalid, private, or has been revoked.');
       } finally {
@@ -51,7 +54,7 @@ export default function EvidenceSheet() {
       setMatchLoading(true);
       setMatchError(null);
       const res = await publicApi.matchJd(token, jdText.trim());
-      setMatchResult(res.data);
+      setMatchResult(res.data || res);
     } catch (err) {
       setMatchError(err.message || 'Failed to match candidate against JD.');
     } finally {

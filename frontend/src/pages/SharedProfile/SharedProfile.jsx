@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useResource } from '../../hooks/useResource.js';
-import { analysisApi } from '../../services/api/analysisApi.js';
+import { publicApi } from '../../services/api/publicApi.js';
 import { Loading, ErrorNotice, PageHeading, Note, ExternalLink } from '../../components/common/UI.jsx';
 import { Stamp, Rule, SectionHeading } from '../../ui/index.js';
 import DumbbellChart from '../../components/dashboard/DumbbellChart.jsx';
@@ -12,7 +12,7 @@ export default function SharedProfile() {
   const { shareId } = useParams();
   const { data: analysis, loading, error, reload } = useResource(
     `shared:${shareId}`,
-    signal => analysisApi.getShared(shareId, signal)
+    signal => publicApi.getSharedView(shareId, signal)
   );
 
   if (loading) return <Loading text="Retrieving verified audit ledger…" />;
