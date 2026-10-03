@@ -16,4 +16,4 @@ try {
     setTimeout(() => process.exit(0),25000).unref();
   };
   process.on('SIGTERM',shutdown); process.on('SIGINT',shutdown);
-} catch { logger.error('startup_failed',{ message: 'Check database connectivity and backend environment configuration.' }); process.exit(1); }
+} catch (err) { logger.error('startup_failed',{ message: err.message || 'Check database connectivity and backend environment configuration.', error: err }); process.exit(1); }
